@@ -16,7 +16,7 @@ export async function createSession(req, res) {
 
     const callId = `session_${Date.now()}_${Math.random()
       .toString(36)
-      .substring(7)}`;
+      .substring(2, 9)}`;
 
     const session = await Session.create({
       problem,
@@ -67,10 +67,10 @@ export async function getMyRecentSessions(req, res) {
     //get session where user is either host or participant
     const sessions = await Session.find({
       status: "completed",
-      $or: [{ host: userId }, { participant: { userId } }].sort(
-        { createdAt: -1 }.limit(20)
-      ),
-    });
+      $or: [{ host: userId }, { participant: userId }],
+    })
+      .sort({ createdAt: -1 })
+      .limit(20);
 
     res.status(200).json({ sessions });
   } catch (error) {
@@ -104,8 +104,18 @@ export async function joinSession(req, res) {
 
     if (!session) return res.status(404).json({ msg: "Session not found" });
 
+    if (session.status !== "active") {
+      return res.status(400).json({ msg: "Cannot join a completed session" });
+    }
+
+    if (session.host.toString() === userId.toString()) {
+      return res
+        .status(400)
+        .json({ msg: "Host cannot join their own session as participant" });
+    }
+
     if (session.participant)
-      return res.status(404).json({ msg: "Session is full" });
+      return res.status(409).json({ msg: "Session is full" });
 
     session.participant = userId;
     await session.save();
@@ -139,9 +149,6 @@ export async function endSession(req, res) {
       return res.status(400).json({ msg: "Session is already completed" });
     }
 
-    session.status = "completed";
-    session.save();
-
     //delete stream video call
     const call = streamClient.video.call("default", session.callId);
     await call.delete({ hard: true });
@@ -150,6 +157,9 @@ export async function endSession(req, res) {
 
     const channel = chatClient.channel("messaging", session.callId);
     channel.delete();
+
+    session.status = "completed";
+    session.save();
 
     res.status(200).json({ session, msg: "Session ended successfully" });
   } catch (error) {
