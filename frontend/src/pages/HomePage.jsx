@@ -10,6 +10,7 @@ import {
   UsersIcon,
 } from "lucide-react";
 import { SignInButton } from "@clerk/clerk-react";
+import NavBar from "../components/NavBar";
 
 const HomePage = () => {
   return (
