@@ -18,7 +18,7 @@ const NavBar = () => {
           </div>
 
           <div className="flex flex-col">
-            <span className="font-black text-xl bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent font-mono">
+            <span className="font-black lg:text-xl sm:text-[2px] bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent font-mono">
               InterviewForge
             </span>
             <span className="text-xs text-base-content/60 font-medium -mt-1">
