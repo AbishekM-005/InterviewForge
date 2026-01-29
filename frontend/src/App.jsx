@@ -3,9 +3,10 @@ import { useUser } from "@clerk/clerk-react";
 import { Routes, Route, Navigate } from "react-router";
 import AboutPage from "./pages/AboutPage";
 import HomePage from "./pages/HomePage";
-import ProblemsPage from "./pages/ProblemsPage";
+import ProblemsPage from "./pages/Problems";
 import { Toaster } from "react-hot-toast";
 import DashBoardPage from "./pages/DashBoardPage";
+import Problem from "./pages/ProblemPage";
 
 const App = () => {
   const { isSignedIn, isLoaded } = useUser();
@@ -27,8 +28,12 @@ const App = () => {
           path="/problems"
           element={isSignedIn ? <ProblemsPage /> : <Navigate to={"/"} />}
         />
+        <Route
+          path="/problem/:id"
+          element={isSignedIn ? <Problem /> : <Navigate to={"/"} />}
+        />
       </Routes>
-      <Toaster toastOptions={{ duration: 3000 }} position="bottom-right" />
+      <Toaster toastOptions={{ duration: 3000 }} />
     </>
   );
 };
