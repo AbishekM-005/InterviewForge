@@ -21,6 +21,7 @@ const Problem = () => {
   );
   const [output, setOutput] = useState(null);
   const [isRunning, setIsRunning] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   const currentProblem = PROBLEMS[currentProblemId];
 
@@ -32,6 +33,20 @@ const Problem = () => {
       setOutput(null);
     }
   }, [id, selectedLanguage]);
+
+  useEffect(() => {
+    const media = window.matchMedia("(max-width: 1024px)");
+    const handleChange = () => setIsMobile(media.matches);
+    handleChange();
+
+    if (media.addEventListener) {
+      media.addEventListener("change", handleChange);
+      return () => media.removeEventListener("change", handleChange);
+    }
+
+    media.addListener(handleChange);
+    return () => media.removeListener(handleChange);
+  }, []);
 
   const handleLanguageChange = (e) => {
     const newLang = e.target.value;
@@ -111,9 +126,9 @@ const Problem = () => {
     <div className="h-screen  bg-base-100 flex flex-col">
       <NavBar />
       <div className="flex-1">
-        <PanelGroup direction="horizontal">
+        <PanelGroup direction={isMobile ? "vertical" : "horizontal"}>
           {/* Left panel - problem description */}
-          <Panel defaultSize={40} minSize={30}>
+          <Panel defaultSize={isMobile ? 45 : 40} minSize={30}>
             <ProblemDescription
               problem={currentProblem}
               currentProblemId={currentProblemId}
@@ -122,9 +137,13 @@ const Problem = () => {
             />
           </Panel>
 
-          <PanelResizeHandle className="w-2 bg-base-300 hover:bg-primary transition-colors cursor-col-resize" />
+          <PanelResizeHandle
+            className={`${
+              isMobile ? "h-2 cursor-row-resize" : "w-2 cursor-col-resize"
+            } bg-base-300 hover:bg-primary transition-colors`}
+          />
           {/* right panel - code editor & output */}
-          <Panel defaultSize={60} minSize={30}>
+          <Panel defaultSize={isMobile ? 55 : 60} minSize={30}>
             <PanelGroup direction="vertical">
               {/* Top panel - Code Editor Panel*/}
               <Panel defaultSize={70} minSize={30}>

@@ -13,29 +13,27 @@ const CodeEditorPanel = ({
 }) => {
   return (
     <div className="h-full bg-base-300 flex flex-col">
-      <div className="flex items-center justify-between px-4 py-3 bg-base-100 border-t border-base-300">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 px-4 py-3 bg-base-100 border-t border-base-300">
         <div className="flex items-center gap-3">
-          <div className="flex items-center gap-3">
-            <img
-              src={LANGUAGE_CONFIG[selectedLanguage].icon}
-              alt={LANGUAGE_CONFIG[selectedLanguage].name}
-              className="size-6"
-            />
-            <select
-              className="select select-sm"
-              value={selectedLanguage}
-              onChange={onLanguageChange}
-            >
-              {Object.entries(LANGUAGE_CONFIG).map(([key, lang]) => (
-                <option key={key} value={key}>
-                  {lang.name}
-                </option>
-              ))}
-            </select>
-          </div>
+          <img
+            src={LANGUAGE_CONFIG[selectedLanguage].icon}
+            alt={LANGUAGE_CONFIG[selectedLanguage].name}
+            className="size-5 sm:size-6"
+          />
+          <select
+            className="select select-sm sm:select-md"
+            value={selectedLanguage}
+            onChange={onLanguageChange}
+          >
+            {Object.entries(LANGUAGE_CONFIG).map(([key, lang]) => (
+              <option key={key} value={key}>
+                {lang.name}
+              </option>
+            ))}
+          </select>
         </div>
         <button
-          className="btn btn-primary btn-sm gap-2"
+          className="btn btn-primary btn-sm sm:btn-md gap-2 w-full sm:w-auto"
           disabled={isRunning}
           onClick={onRunCode}
         >

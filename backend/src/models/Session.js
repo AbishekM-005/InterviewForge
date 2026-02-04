@@ -16,7 +16,7 @@ const sessionSchema = new mongoose.Schema(
     participant: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-      default: "",
+      default: null,
     },
     status: {
       type: String,
@@ -29,7 +29,7 @@ const sessionSchema = new mongoose.Schema(
       default: "",
     },
   },
-  { timeStamps: true }
+  { timestamps: true }
 );
 
 const Session = mongoose.model("Session", sessionSchema);
