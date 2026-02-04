@@ -10,9 +10,9 @@ const problemDescription = ({
   return (
     <div className="h-full overflow-y-auto bg-base-200">
       {/* HEADER SECTION  */}
-      <div className="p-6 bg-base-100 border-b border-base-300">
-        <div className="flex items-start justify-between mb-3">
-          <h1 className="text-3xl font-bold text-base-content">
+      <div className="p-4 sm:p-6 bg-base-100 border-b border-base-300">
+        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 mb-3">
+          <h1 className="text-2xl sm:text-3xl font-bold text-base-content">
             {problem.title}
           </h1>
           <span
@@ -41,11 +41,11 @@ const problemDescription = ({
         </div>
       </div>
 
-      <div className="p-6 space-y-6">
+      <div className="p-4 sm:p-6 space-y-6">
         {/* PROBLEM DESC */}
         <div className="bg-base-100 rounded-xl shadow-sm p-5 border border-base-300">
           <h2 className="text-xl font-bold text-base-content">Description</h2>
-          <div className="space-y-3 text-base leading-relaxed">
+          <div className="space-y-3 text-sm sm:text-base leading-relaxed">
             <p className="text-base-content/90">{problem.description.text}</p>
             {problem.description.notes.map((note, index) => (
               <p key={index} className="text-base-content/90">
@@ -67,15 +67,15 @@ const problemDescription = ({
                     Example {idx + 1}
                   </p>
                 </div>
-                <div className="bg-base-200 rounded-lg p-4 font-mono text-sm space-y-1.5">
+                <div className="bg-base-200 rounded-lg p-4 font-mono text-xs sm:text-sm space-y-1.5">
                   <div className="flex gap-2">
-                    <span className="text-primary font-bold min-w-[70px]">
+                    <span className="text-primary font-bold min-w-[56px] sm:min-w-[70px]">
                       Input:
                     </span>
                     <span>{example.input}</span>
                   </div>
                   <div className="flex gap-2">
-                    <span className="text-secondary font-bold min-w-[70px]">
+                    <span className="text-secondary font-bold min-w-[56px] sm:min-w-[70px]">
                       Output:
                     </span>
                     <span>{example.output}</span>
@@ -99,7 +99,7 @@ const problemDescription = ({
           <h2 className="text-xl font-bold mb-4 text-base-content">
             Constraints
           </h2>
-          <ul className="space-y-2 text-base-content/90">
+          <ul className="space-y-2 text-sm sm:text-base text-base-content/90">
             {problem.constraints.map((constraint, idx) => (
               <li key={idx} className="flex gap-2">
                 <span className="text-primary">.</span>

@@ -17,7 +17,7 @@ const HomePage = () => {
     <div className="bg-gradient-to-br from-base-100 via-base-200 to-base-300">
       {/* NAVBAR */}
       <nav className="bg-base-100/60 backdrop-blur-md border-b border-primary/20 sticky top-0 z-50 shadow-lg">
-        <div className="max-w-7xl mx-auto p-4 flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between gap-3">
           {/* LOGO*/}
           <Link
             to={"/"}
@@ -28,7 +28,7 @@ const HomePage = () => {
             </div>
 
             <div className="flex flex-col">
-              <span className="font-black lg:text-xl bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent font-mono tracking-wider">
+              <span className="font-black text-lg sm:text-xl bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent font-mono tracking-wider">
                 InterviewForge
               </span>
               <span className="text-xs text-base-content/60 font-medium -mt-1">
@@ -48,7 +48,7 @@ const HomePage = () => {
       </nav>
 
       {/* HERO SECTION */}
-      <div className="max-w-7xl mx-auto px-4 py-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* LEFT CONTENT */}
           <div className="space-y-8">
@@ -57,7 +57,7 @@ const HomePage = () => {
               Real-time Collaboration
             </div>
 
-            <h1 className="text-5xl lg:text-7xl font-black leading-tight">
+            <h1 className="text-3xl sm:text-5xl lg:text-7xl font-black leading-tight">
               <span className="bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">
                 Code Together,
               </span>
@@ -65,7 +65,7 @@ const HomePage = () => {
               <span className="text-base-content">Learn Together</span>
             </h1>
 
-            <p className="text-xl text-base-content/70 leading-relaxed max-w-xl">
+            <p className="text-base sm:text-xl text-base-content/70 leading-relaxed max-w-xl">
               The ultimate platform for collaborative coding interviews and pair
               programming. Connect face-to-face, code in real-time, and ace your
               technical interviews.
@@ -103,7 +103,7 @@ const HomePage = () => {
             </div>
 
             {/* STATS */}
-            <div className="stats stats-vertical lg:stats-horizontal bg-base-100 shadow-lg">
+            <div className="stats stats-vertical lg:stats-horizontal bg-base-100 shadow-lg w-full">
               <div className="stat">
                 <div className="stat-value text-primary">10K+</div>
                 <div className="stat-title">Active Users</div>
@@ -128,20 +128,20 @@ const HomePage = () => {
         </div>
 
         {/* FEATURES SECTION */}
-        <div className="max-w-7xl mx-auto px-4 py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold mb-4">
+            <h2 className="text-3xl sm:text-4xl font-bold mb-4">
               Everything you need to{" "}
               <span className="text-primary font-mono">Succeed</span>
             </h2>
-            <p className="text-lg text-base-content/70 max-w-2xl mx-auto">
+            <p className="text-base sm:text-lg text-base-content/70 max-w-2xl mx-auto">
               Powerful features designed to make your coding interviews seamless
               and productive
             </p>
           </div>
 
           {/* FEATURES GRID */}
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8">
             {/* FEATURE 1 */}
             <div className="card bg-base-100 shadow-xl">
               <div className="card-body items-center text-center">
