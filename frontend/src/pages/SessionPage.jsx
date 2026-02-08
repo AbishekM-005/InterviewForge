@@ -131,6 +131,17 @@ function SessionPage() {
     return () => media.removeListener(handleChange);
   }, []);
 
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const updateVh = () => {
+      const vh = window.innerHeight * 0.01;
+      document.documentElement.style.setProperty("--app-vh", `${vh}px`);
+    };
+    updateVh();
+    window.addEventListener("resize", updateVh);
+    return () => window.removeEventListener("resize", updateVh);
+  }, []);
+
   const handleLanguageChange = (event) => {
     const newLanguage = event.target.value;
     setSelectedLanguage(newLanguage);
@@ -179,7 +190,7 @@ function SessionPage() {
 
       <div className="flex-1 min-h-0 overflow-hidden">
         {isMobile ? (
-          <div className="h-[calc(100dvh-72px)] min-h-0">
+          <div className="h-[calc(var(--app-vh,1vh)*100-72px)] min-h-0">
             <PanelGroup direction="vertical" className="h-full min-h-0">
               <Panel defaultSize={40} minSize={25} className="h-full min-h-0">
               <div className="h-full min-h-0 p-2 sm:p-4">

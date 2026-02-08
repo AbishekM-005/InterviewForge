@@ -318,7 +318,7 @@ function VideoCallUI({ chatClient, channel }) {
           )}
         </div>
 
-        <div className="flex-1 min-h-[320px] sm:min-h-[360px] lg:min-h-0 bg-base-300 rounded-lg overflow-hidden relative aspect-auto">
+        <div className="flex-1 min-h-[320px] sm:min-h-[360px] lg:min-h-0 bg-base-300 rounded-lg overflow-hidden relative aspect-auto h-full">
           <SpeakerLayout />
           {showDebugPanel && (
             <div className="absolute bottom-2 left-2 right-2 z-10 bg-black/70 text-white text-xs rounded-md p-2 space-y-1">
