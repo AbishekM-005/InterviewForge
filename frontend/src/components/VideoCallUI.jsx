@@ -198,50 +198,38 @@ function VideoCallUI({ chatClient, channel }) {
       </div>
 
       {/* CHAT SECTION */}
-      {chatClient && channel && (
+      {chatClient && channel && isChatOpen && (
         <div
-          className={`${
+          className={
             isDesktop
-              ? "flex flex-col rounded-lg shadow overflow-hidden bg-[#272a30] transition-all duration-300 ease-in-out"
+              ? "flex w-80 flex-col rounded-lg shadow overflow-hidden bg-[#272a30]"
               : "fixed inset-0 z-20 flex flex-col bg-[#272a30]"
-          } ${
-            isChatOpen
-              ? isDesktop
-                ? "w-80 opacity-100"
-                : "opacity-100"
-              : isDesktop
-                ? "w-0 opacity-0"
-                : "hidden"
-          }`}
+          }
         >
-          {isChatOpen && (
-            <>
-              <div className="bg-[#1c1e22] p-3 border-b border-[#3a3d44] flex items-center justify-between">
-                <h3 className="font-semibold text-white">Session Chat</h3>
-                <button
-                  onClick={() => setIsChatOpen(false)}
-                  className="text-gray-400 hover:text-white transition-colors"
-                  title="Close chat"
-                >
-                  <XIcon className="size-5" />
-                </button>
-              </div>
-              <div className="flex-1 overflow-hidden stream-chat-dark">
-                <Chat client={chatClient} theme="str-chat__theme-dark">
-                  <Channel channel={channel}>
-                    <Window>
-                      <MessageList customMessageActions={customMessageActions} />
-                      <MessageInput />
-                    </Window>
-                    <Thread
-                      additionalMessageListProps={{ customMessageActions }}
-                      additionalParentMessageProps={{ customMessageActions }}
-                    />
-                  </Channel>
-                </Chat>
-              </div>
-            </>
-          )}
+          <div className="bg-[#1c1e22] p-3 border-b border-[#3a3d44] flex items-center justify-between">
+            <h3 className="font-semibold text-white">Session Chat</h3>
+            <button
+              onClick={() => setIsChatOpen(false)}
+              className="text-gray-400 hover:text-white transition-colors"
+              title="Close chat"
+            >
+              <XIcon className="size-5" />
+            </button>
+          </div>
+          <div className="flex-1 overflow-hidden stream-chat-dark">
+            <Chat client={chatClient} theme="str-chat__theme-dark">
+              <Channel channel={channel}>
+                <Window>
+                  <MessageList customMessageActions={customMessageActions} />
+                  <MessageInput />
+                </Window>
+                <Thread
+                  additionalMessageListProps={{ customMessageActions }}
+                  additionalParentMessageProps={{ customMessageActions }}
+                />
+              </Channel>
+            </Chat>
+          </div>
         </div>
       )}
     </div>

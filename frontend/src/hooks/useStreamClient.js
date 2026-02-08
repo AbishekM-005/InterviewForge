@@ -59,10 +59,6 @@ function useStreamClient(session, loadingSession, isHost, isParticipant) {
         setCall(videoCall);
 
         const apiKey = import.meta.env.VITE_STREAM_API_KEY;
-        if (!apiKey) {
-          throw new Error("Missing VITE_STREAM_API_KEY");
-        }
-
         chatClientInstance = StreamChat.getInstance(apiKey);
 
         await chatClientInstance.connectUser(
