@@ -20,13 +20,6 @@ const allowedOrigins = (ENV.CLIENT_URL || ENV.CLIENT_URL)
 
 app.disable("x-powered-by");
 app.use(express.json({ limit: "100kb" }));
-app.use((req, _res, next) => {
-  const origin = req.headers.origin || "no-origin";
-  console.log(
-    `[request] method=${req.method} path=${req.originalUrl} origin=${origin}`
-  );
-  next();
-});
 app.use(
   cors({
     origin: (origin, callback) => {
@@ -38,9 +31,6 @@ app.use(
         return callback(null, true);
       }
 
-      console.warn(
-        `[cors] blocked origin=${origin} allowed=${allowedOrigins.join(",")}`
-      );
       return callback(new Error("Not allowed by CORS"));
     },
     credentials: true,
