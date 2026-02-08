@@ -15,8 +15,8 @@ const HomePage = () => {
   return (
     <div className="min-h-dvh bg-gradient-to-br from-base-100 via-base-200 to-base-300">
       {/* NAVBAR */}
-      <nav className="bg-base-100/60 backdrop-blur-md border-b border-primary/20 sticky top-0 z-50 shadow-lg">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between gap-3">
+      <nav className="bg-base-100/70 backdrop-blur-md border-b border-primary/20 sticky top-0 z-50 shadow-lg">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between gap-4">
           {/* LOGO*/}
           <Link
             to={"/"}
@@ -38,8 +38,8 @@ const HomePage = () => {
 
           {/* AUTH BTN */}
           <SignInButton mode="modal">
-            <button className="group px-6 py-3 bg-gradient-to-r from-primary to-secondary rounded-xl text-white font-semibold text-sm shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105 flex items-center gap-2">
-              <span>Get Started</span>
+            <button className="group px-4 sm:px-5 py-2.5 bg-gradient-to-r from-primary to-secondary rounded-lg text-white font-semibold text-xs sm:text-sm shadow-md hover:shadow-lg transition-all duration-200 hover:-translate-y-0.5 flex items-center gap-2">
+              <span className="tracking-wide">Get Started</span>
               <ArrowRightIcon className="size-4 group-hover:translate-x-0.5 transition-transform" />
             </button>
           </SignInButton>
@@ -47,8 +47,8 @@ const HomePage = () => {
       </nav>
 
       {/* HERO SECTION */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+        <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
           {/* LEFT CONTENT */}
           <div className="space-y-8">
             <div className="badge badge-primary badge-lg">
@@ -87,15 +87,15 @@ const HomePage = () => {
             </div>
 
             {/* CTA BUTTONS */}
-            <div className="flex flex-wrap gap-4">
+            <div className="flex flex-wrap gap-3 sm:gap-4">
               <SignInButton mode="modal">
-                <button className="btn btn-primary btn-lg">
+                <button className="btn btn-primary btn-md sm:btn-lg w-full sm:w-auto">
                   Start Coding Now
                   <ArrowRightIcon className="size-5" />
                 </button>
               </SignInButton>
 
-              <a href="#features" className="btn btn-outline btn-lg">
+              <a href="#features" className="btn btn-outline btn-md sm:btn-lg w-full sm:w-auto">
                 <VideoIcon className="size-5" />
                 Watch Demo
               </a>
@@ -122,7 +122,7 @@ const HomePage = () => {
           <img
             src="/hero.png"
             alt="CodeCollab Platform"
-            className="w-full h-auto rounded-3xl shadow-2xl border-4 border-base-100 hover:scale-105 transition-transform duration-500"
+            className="w-full h-auto rounded-3xl shadow-2xl border-4 border-base-100/90 hover:scale-[1.02] transition-transform duration-500"
           />
         </div>
 
