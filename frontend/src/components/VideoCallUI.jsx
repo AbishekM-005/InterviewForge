@@ -99,8 +99,8 @@ function VideoCallUI({ chatClient, channel }) {
   }
 
   return (
-    <div className="h-full min-h-0 flex flex-col lg:flex-row gap-3 relative str-video">
-      <div className="flex-1 min-h-0 flex flex-col gap-3">
+    <div className="h-full min-h-0 flex flex-col lg:flex-row gap-2 sm:gap-3 relative str-video">
+      <div className="flex-1 min-h-0 flex flex-col gap-2 sm:gap-3">
         {/* Participants count badge and Chat Toggle */}
         <div className="flex flex-wrap items-center justify-between gap-2 bg-base-100 p-3 rounded-lg shadow">
           <div className="flex items-center gap-2 min-w-0">
@@ -124,11 +124,11 @@ function VideoCallUI({ chatClient, channel }) {
           )}
         </div>
 
-        <div className="flex-1 min-h-[240px] bg-base-300 rounded-lg overflow-hidden relative">
+        <div className="flex-1 min-h-[260px] sm:min-h-[360px] lg:min-h-0 bg-base-300 rounded-lg overflow-hidden relative">
           <SpeakerLayout />
         </div>
 
-        <div className="bg-base-100 p-3 rounded-lg shadow flex justify-center">
+        <div className="bg-base-100 p-2 sm:p-3 rounded-lg shadow flex justify-center sticky bottom-0">
           <CallControls onLeave={() => navigate("/dashboard")} />
         </div>
       </div>
@@ -139,7 +139,7 @@ function VideoCallUI({ chatClient, channel }) {
           className={`${
             isDesktop
               ? "flex flex-col rounded-lg shadow overflow-hidden bg-[#272a30] transition-all duration-300 ease-in-out"
-              : "absolute inset-0 z-20 flex flex-col rounded-lg shadow overflow-hidden bg-[#272a30]"
+              : "fixed inset-0 z-20 flex flex-col bg-[#272a30]"
           } ${
             isChatOpen
               ? isDesktop
