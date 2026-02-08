@@ -62,6 +62,17 @@ function VideoCallUI({ chatClient, channel }) {
   const participantCount = useParticipantCount();
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [isDesktop, setIsDesktop] = useState(false);
+  const [debugInfo, setDebugInfo] = useState({
+    camera: "unknown",
+    microphone: "unknown",
+    permissionsError: "",
+    mediaDevices: "unknown",
+    secureContext: "unknown",
+    userAgent: "",
+  });
+  const showDebugPanel =
+    typeof window !== "undefined" &&
+    new URLSearchParams(window.location.search).get("debug") === "1";
 
   const customMessageActions = useMemo(
     () => ({
@@ -86,6 +97,45 @@ function VideoCallUI({ chatClient, channel }) {
     media.addListener(handleChange);
     return () => media.removeListener(handleChange);
   }, []);
+
+  useEffect(() => {
+    if (!showDebugPanel || typeof navigator === "undefined") return;
+
+    const updateInfo = async () => {
+      let camera = "unknown";
+      let microphone = "unknown";
+      let permissionsError = "";
+
+      try {
+        if (navigator.permissions?.query) {
+          const camStatus = await navigator.permissions.query({
+            name: "camera",
+          });
+          const micStatus = await navigator.permissions.query({
+            name: "microphone",
+          });
+          camera = camStatus?.state || "unknown";
+          microphone = micStatus?.state || "unknown";
+        }
+      } catch (error) {
+        permissionsError = error?.message || "permissions query failed";
+      }
+
+      setDebugInfo({
+        camera,
+        microphone,
+        permissionsError,
+        mediaDevices: navigator.mediaDevices ? "available" : "missing",
+        secureContext:
+          typeof window !== "undefined" && window.isSecureContext
+            ? "true"
+            : "false",
+        userAgent: navigator.userAgent || "",
+      });
+    };
+
+    updateInfo();
+  }, [showDebugPanel]);
 
   if (callingState === CallingState.JOINING) {
     return (
@@ -124,8 +174,22 @@ function VideoCallUI({ chatClient, channel }) {
           )}
         </div>
 
-        <div className="flex-1 min-h-[260px] sm:min-h-[360px] lg:min-h-0 bg-base-300 rounded-lg overflow-hidden relative">
+        <div className="flex-1 min-h-[260px] sm:min-h-[360px] lg:min-h-0 bg-base-300 rounded-lg overflow-hidden relative aspect-video sm:aspect-auto">
           <SpeakerLayout />
+          {showDebugPanel && (
+            <div className="absolute bottom-2 left-2 right-2 z-10 bg-black/70 text-white text-xs rounded-md p-2 space-y-1">
+              <div className="font-semibold">Debug (video)</div>
+              <div>callingState: {callingState}</div>
+              <div>participants: {participantCount}</div>
+              <div>secureContext: {debugInfo.secureContext}</div>
+              <div>mediaDevices: {debugInfo.mediaDevices}</div>
+              <div>camera: {debugInfo.camera}</div>
+              <div>microphone: {debugInfo.microphone}</div>
+              {debugInfo.permissionsError ? (
+                <div>permError: {debugInfo.permissionsError}</div>
+              ) : null}
+            </div>
+          )}
         </div>
 
         <div className="bg-base-100 p-2 sm:p-3 rounded-lg shadow flex justify-center sticky bottom-0">

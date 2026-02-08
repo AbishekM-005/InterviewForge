@@ -11,7 +11,7 @@ const NavBar = () => {
         {/* LOGO */}
         <Link
           to="/"
-          className="group flex items-center gap-3 hover:scale-105 transition-transform duration-200 "
+          className="group flex items-center gap-3 hover:scale-105 transition-transform duration-200 shrink-0"
         >
           <div className="size-10 rounded-xl bg-gradient-to-r from-primary via-secondary to-accent flex items-center justify-center shadow-lg">
             <SparklesIcon className="size-6 text-white" />
@@ -27,12 +27,12 @@ const NavBar = () => {
           </div>
         </Link>
 
-        <div className="flex items-center gap-1 sm:gap-2 flex-nowrap justify-end overflow-x-auto">
+        <div className="flex items-center gap-1 sm:gap-2 flex-wrap justify-end min-w-0">
           {/* PROBLEMS PAGE LINK */}
           <Link
             to={"/problems"}
             aria-label="Problems"
-            className={`px-4 py-2.5 rounded-lg transition-all duration-200 ${
+            className={`px-2 sm:px-4 py-2 sm:py-2.5 rounded-lg transition-all duration-200 shrink-0 ${
               isActive("/problems")
                 ? "bg-primary text-primary-content "
                 : "hover:bg-base-200 text-base-content/70 hover:text-base-content"
@@ -47,7 +47,7 @@ const NavBar = () => {
           <Link
             to={"/dashboard"}
             aria-label="Dashboard"
-            className={`px-4 py-2.5 rounded-lg transition-all duration-200 ${
+            className={`px-2 sm:px-4 py-2 sm:py-2.5 rounded-lg transition-all duration-200 shrink-0 ${
               isActive("/dashboard")
                 ? "bg-primary text-primary-content "
                 : "hover:bg-base-200 text-base-content/70 hover:text-base-content"
@@ -58,7 +58,7 @@ const NavBar = () => {
               <span className="font-medium hidden sm:inline">Dashboard</span>
             </div>
           </Link>
-          <div className="ml-2 sm:ml-4 mt-1 sm:mt-0">
+          <div className="ml-1 sm:ml-4 mt-1 sm:mt-0 shrink-0">
             <UserButton />
           </div>
         </div>
