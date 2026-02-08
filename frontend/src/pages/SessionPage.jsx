@@ -179,172 +179,202 @@ function SessionPage() {
 
       <div className="flex-1 min-h-0">
         {isMobile ? (
-          <div className="flex flex-col gap-4 p-2 sm:p-4">
-            <div className="bg-base-200 p-2 sm:p-4 rounded-xl">
-              {isInitializingCall ? (
-                <div className="min-h-[280px] flex items-center justify-center">
-                  <div className="text-center">
-                    <Loader2Icon className="w-12 h-12 mx-auto animate-spin text-primary mb-4" />
-                    <p className="text-lg">Connecting to video call...</p>
-                  </div>
-                </div>
-              ) : !streamClient || !call ? (
-                <div className="min-h-[280px] flex items-center justify-center">
-                  <div className="card bg-base-100 shadow-xl max-w-md">
-                    <div className="card-body items-center text-center">
-                      <div className="w-24 h-24 bg-error/10 rounded-full flex items-center justify-center mb-4">
-                        <PhoneOffIcon className="w-12 h-12 text-error" />
+          <PanelGroup direction="vertical" className="h-full min-h-0">
+            <Panel defaultSize={40} minSize={25} className="min-h-0">
+              <div className="h-full min-h-0 p-2 sm:p-4">
+                <div className="bg-base-200 p-2 sm:p-4 rounded-xl h-full min-h-0">
+                  {isInitializingCall ? (
+                    <div className="h-full min-h-[280px] flex items-center justify-center">
+                      <div className="text-center">
+                        <Loader2Icon className="w-12 h-12 mx-auto animate-spin text-primary mb-4" />
+                        <p className="text-lg">Connecting to video call...</p>
                       </div>
-                      <h2 className="card-title text-2xl">Connection Failed</h2>
-                      <p className="text-base-content/70">Unable to connect to the video call</p>
                     </div>
-                  </div>
-                </div>
-              ) : (
-                <div className="min-h-[280px]">
-                  <StreamVideo client={streamClient}>
-                    <StreamCall call={call}>
-                      <VideoCallUI chatClient={chatClient} channel={channel} />
-                    </StreamCall>
-                  </StreamVideo>
-                </div>
-              )}
-            </div>
-
-            <div className="bg-base-100 border border-base-300 rounded-xl p-4">
-              <div className="flex flex-col gap-3">
-                <div>
-                  <h1 className="text-2xl font-bold text-base-content">
-                    {session?.problem || "Loading..."}
-                  </h1>
-                  {problemData?.category && (
-                    <p className="text-base-content/60 mt-1">{problemData.category}</p>
-                  )}
-                  <p className="text-base-content/60 mt-2 text-sm">
-                    Host: {session?.host?.name || "Loading..."} |{" "}
-                    {session?.participant ? 2 : 1}/2 participants
-                  </p>
-                </div>
-
-                <div className="flex flex-wrap items-center gap-2">
-                  {isHost && (
-                    <button
-                      className="btn btn-outline btn-sm gap-2"
-                      onClick={handleCopySessionLink}
-                      type="button"
-                    >
-                      <Link2Icon className="w-4 h-4" />
-                      Invite
-                    </button>
-                  )}
-
-                  <span
-                    className={`badge badge-lg ${getDifficultyBadgeClass(session?.difficulty)}`}
-                  >
-                    {difficultyLabel}
-                  </span>
-
-                  {isHost && session?.status === "active" && (
-                    <button
-                      onClick={handleEndSession}
-                      disabled={endSessionMutation.isPending}
-                      className="btn btn-error btn-sm gap-2"
-                    >
-                      {endSessionMutation.isPending ? (
-                        <Loader2Icon className="w-4 h-4 animate-spin" />
-                      ) : (
-                        <LogOutIcon className="w-4 h-4" />
-                      )}
-                      End Session
-                    </button>
-                  )}
-
-                  {session?.status === "completed" && (
-                    <span className="badge badge-ghost badge-lg">Completed</span>
-                  )}
-                </div>
-              </div>
-            </div>
-
-            {problemData?.description && (
-              <div className="bg-base-100 rounded-xl shadow-sm p-5 border border-base-300">
-                <h2 className="text-xl font-bold mb-4 text-base-content">Description</h2>
-                <div className="space-y-3 text-base leading-relaxed">
-                  <p className="text-base-content/90">{problemData.description.text}</p>
-                  {problemData.description.notes?.map((note, index) => (
-                    <p key={index} className="text-base-content/90">
-                      {note}
-                    </p>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {problemData?.examples?.length > 0 && (
-              <div className="bg-base-100 rounded-xl shadow-sm p-5 border border-base-300">
-                <h2 className="text-xl font-bold mb-4 text-base-content">Examples</h2>
-
-                <div className="space-y-4">
-                  {problemData.examples.map((example, index) => (
-                    <div key={index}>
-                      <div className="flex items-center gap-2 mb-2">
-                        <span className="badge badge-sm">{index + 1}</span>
-                        <p className="font-semibold text-base-content">Example {index + 1}</p>
-                      </div>
-                      <div className="bg-base-200 rounded-lg p-4 font-mono text-sm space-y-1.5">
-                        <div className="flex gap-2">
-                          <span className="text-primary font-bold min-w-[70px]">Input:</span>
-                          <span>{example.input}</span>
-                        </div>
-                        <div className="flex gap-2">
-                          <span className="text-secondary font-bold min-w-[70px]">Output:</span>
-                          <span>{example.output}</span>
-                        </div>
-                        {example.explanation && (
-                          <div className="pt-2 border-t border-base-300 mt-2">
-                            <span className="text-base-content/60 font-sans text-xs">
-                              <span className="font-semibold">Explanation:</span>{" "}
-                              {example.explanation}
-                            </span>
+                  ) : !streamClient || !call ? (
+                    <div className="h-full min-h-[280px] flex items-center justify-center">
+                      <div className="card bg-base-100 shadow-xl max-w-md">
+                        <div className="card-body items-center text-center">
+                          <div className="w-24 h-24 bg-error/10 rounded-full flex items-center justify-center mb-4">
+                            <PhoneOffIcon className="w-12 h-12 text-error" />
                           </div>
-                        )}
+                          <h2 className="card-title text-2xl">Connection Failed</h2>
+                          <p className="text-base-content/70">
+                            Unable to connect to the video call
+                          </p>
+                        </div>
                       </div>
                     </div>
-                  ))}
+                  ) : (
+                    <div className="h-full min-h-[280px]">
+                      <StreamVideo client={streamClient}>
+                        <StreamCall call={call}>
+                          <VideoCallUI chatClient={chatClient} channel={channel} />
+                        </StreamCall>
+                      </StreamVideo>
+                    </div>
+                  )}
                 </div>
               </div>
-            )}
+            </Panel>
 
-            {problemData?.constraints?.length > 0 && (
-              <div className="bg-base-100 rounded-xl shadow-sm p-5 border border-base-300">
-                <h2 className="text-xl font-bold mb-4 text-base-content">Constraints</h2>
-                <ul className="space-y-2 text-base-content/90">
-                  {problemData.constraints.map((constraint, index) => (
-                    <li key={index} className="flex gap-2">
-                      <span className="text-primary">-</span>
-                      <code className="text-sm">{constraint}</code>
-                    </li>
-                  ))}
-                </ul>
+            <PanelResizeHandle className="h-4 bg-base-300 hover:bg-primary/70 transition-colors cursor-row-resize flex items-center justify-center">
+              <span className="h-1.5 w-12 rounded-full bg-base-content/30" />
+            </PanelResizeHandle>
+
+            <Panel defaultSize={60} minSize={25} className="min-h-0">
+              <div className="h-full min-h-0 overflow-y-auto p-2 sm:p-4 flex flex-col gap-4">
+                <div className="bg-base-100 border border-base-300 rounded-xl p-4">
+                  <div className="flex flex-col gap-3">
+                    <div>
+                      <h1 className="text-2xl font-bold text-base-content">
+                        {session?.problem || "Loading..."}
+                      </h1>
+                      {problemData?.category && (
+                        <p className="text-base-content/60 mt-1">
+                          {problemData.category}
+                        </p>
+                      )}
+                      <p className="text-base-content/60 mt-2 text-sm">
+                        Host: {session?.host?.name || "Loading..."} |{" "}
+                        {session?.participant ? 2 : 1}/2 participants
+                      </p>
+                    </div>
+
+                    <div className="flex flex-wrap items-center gap-2">
+                      {isHost && (
+                        <button
+                          className="btn btn-outline btn-sm gap-2"
+                          onClick={handleCopySessionLink}
+                          type="button"
+                        >
+                          <Link2Icon className="w-4 h-4" />
+                          Invite
+                        </button>
+                      )}
+
+                      <span
+                        className={`badge badge-lg ${getDifficultyBadgeClass(
+                          session?.difficulty
+                        )}`}
+                      >
+                        {difficultyLabel}
+                      </span>
+
+                      {isHost && session?.status === "active" && (
+                        <button
+                          onClick={handleEndSession}
+                          disabled={endSessionMutation.isPending}
+                          className="btn btn-error btn-sm gap-2"
+                        >
+                          {endSessionMutation.isPending ? (
+                            <Loader2Icon className="w-4 h-4 animate-spin" />
+                          ) : (
+                            <LogOutIcon className="w-4 h-4" />
+                          )}
+                          End Session
+                        </button>
+                      )}
+
+                      {session?.status === "completed" && (
+                        <span className="badge badge-ghost badge-lg">Completed</span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                {problemData?.description && (
+                  <div className="bg-base-100 rounded-xl shadow-sm p-5 border border-base-300">
+                    <h2 className="text-xl font-bold mb-4 text-base-content">
+                      Description
+                    </h2>
+                    <div className="space-y-3 text-base leading-relaxed">
+                      <p className="text-base-content/90">
+                        {problemData.description.text}
+                      </p>
+                      {problemData.description.notes?.map((note, index) => (
+                        <p key={index} className="text-base-content/90">
+                          {note}
+                        </p>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {problemData?.examples?.length > 0 && (
+                  <div className="bg-base-100 rounded-xl shadow-sm p-5 border border-base-300">
+                    <h2 className="text-xl font-bold mb-4 text-base-content">Examples</h2>
+
+                    <div className="space-y-4">
+                      {problemData.examples.map((example, index) => (
+                        <div key={index}>
+                          <div className="flex items-center gap-2 mb-2">
+                            <span className="badge badge-sm">{index + 1}</span>
+                            <p className="font-semibold text-base-content">
+                              Example {index + 1}
+                            </p>
+                          </div>
+                          <div className="bg-base-200 rounded-lg p-4 font-mono text-sm space-y-1.5">
+                            <div className="flex gap-2">
+                              <span className="text-primary font-bold min-w-[70px]">
+                                Input:
+                              </span>
+                              <span>{example.input}</span>
+                            </div>
+                            <div className="flex gap-2">
+                              <span className="text-secondary font-bold min-w-[70px]">
+                                Output:
+                              </span>
+                              <span>{example.output}</span>
+                            </div>
+                            {example.explanation && (
+                              <div className="pt-2 border-t border-base-300 mt-2">
+                                <span className="text-base-content/60 font-sans text-xs">
+                                  <span className="font-semibold">Explanation:</span>{" "}
+                                  {example.explanation}
+                                </span>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {problemData?.constraints?.length > 0 && (
+                  <div className="bg-base-100 rounded-xl shadow-sm p-5 border border-base-300">
+                    <h2 className="text-xl font-bold mb-4 text-base-content">
+                      Constraints
+                    </h2>
+                    <ul className="space-y-2 text-base-content/90">
+                      {problemData.constraints.map((constraint, index) => (
+                        <li key={index} className="flex gap-2">
+                          <span className="text-primary">-</span>
+                          <code className="text-sm">{constraint}</code>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                <div className="bg-base-100 rounded-xl border border-base-300 overflow-hidden">
+                  <CodeEditorPanel
+                    selectedLanguage={selectedLanguage}
+                    code={code}
+                    isRunning={isRunning}
+                    onLanguageChange={handleLanguageChange}
+                    onCodeChange={(value) => setCode(value || "")}
+                    onRunCode={handleRunCode}
+                    onResetCode={handleResetCode}
+                  />
+                </div>
+
+                <div className="bg-base-100 rounded-xl border border-base-300 overflow-hidden">
+                  <OutputPanel output={output} />
+                </div>
               </div>
-            )}
-
-            <div className="bg-base-100 rounded-xl border border-base-300 overflow-hidden">
-              <CodeEditorPanel
-                selectedLanguage={selectedLanguage}
-                code={code}
-                isRunning={isRunning}
-                onLanguageChange={handleLanguageChange}
-                onCodeChange={(value) => setCode(value || "")}
-                onRunCode={handleRunCode}
-                onResetCode={handleResetCode}
-              />
-            </div>
-
-            <div className="bg-base-100 rounded-xl border border-base-300 overflow-hidden">
-              <OutputPanel output={output} />
-            </div>
-          </div>
+            </Panel>
+          </PanelGroup>
         ) : (
           <PanelGroup direction="horizontal" className="h-full min-h-0">
             <Panel defaultSize={50} minSize={30} className="min-h-0">
