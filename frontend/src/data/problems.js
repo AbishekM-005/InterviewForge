@@ -3,7 +3,7 @@ export const PROBLEMS = {
     id: "two-sum",
     title: "Two Sum",
     difficulty: "Easy",
-    category: "Array • Hash Table",
+    category: "Array � Hash Table",
     description: {
       text: "Given an array of integers nums and an integer target, return indices of the two numbers in the array such that they add up to target.",
       notes: [
@@ -27,9 +27,9 @@ export const PROBLEMS = {
       },
     ],
     constraints: [
-      "2 ≤ nums.length ≤ 10⁴",
-      "-10⁹ ≤ nums[i] ≤ 10⁹",
-      "-10⁹ ≤ target ≤ 10⁹",
+      "2 = nums.length = 104",
+      "-10? = nums[i] = 10?",
+      "-10? = target = 10?",
       "Only one valid answer exists",
     ],
     starterCode: {
@@ -77,7 +77,7 @@ export const PROBLEMS = {
     id: "reverse-string",
     title: "Reverse String",
     difficulty: "Easy",
-    category: "String • Two Pointers",
+    category: "String � Two Pointers",
     description: {
       text: "Write a function that reverses a string. The input string is given as an array of characters s.",
       notes: [
@@ -94,7 +94,7 @@ export const PROBLEMS = {
         output: '["h","a","n","n","a","H"]',
       },
     ],
-    constraints: ["1 ≤ s.length ≤ 10⁵", "s[i] is a printable ascii character"],
+    constraints: ["1 = s.length = 105", "s[i] is a printable ascii character"],
     starterCode: {
       javascript: `function reverseString(s) {
     // Write your solution here
@@ -151,7 +151,7 @@ export const PROBLEMS = {
     id: "valid-palindrome",
     title: "Valid Palindrome",
     difficulty: "Easy",
-    category: "String • Two Pointers",
+    category: "String � Two Pointers",
     description: {
       text: "A phrase is a palindrome if, after converting all uppercase letters into lowercase letters and removing all non-alphanumeric characters, it reads the same forward and backward. Alphanumeric characters include letters and numbers.",
       notes: [
@@ -177,7 +177,7 @@ export const PROBLEMS = {
       },
     ],
     constraints: [
-      "1 ≤ s.length ≤ 2 * 10⁵",
+      "1 = s.length = 2 * 105",
       "s consists only of printable ASCII characters",
     ],
     starterCode: {
@@ -223,7 +223,7 @@ export const PROBLEMS = {
     id: "maximum-subarray",
     title: "Maximum Subarray",
     difficulty: "Medium",
-    category: "Array • Dynamic Programming",
+    category: "Array � Dynamic Programming",
     description: {
       text: "Given an integer array nums, find the subarray with the largest sum, and return its sum.",
       notes: [],
@@ -245,7 +245,7 @@ export const PROBLEMS = {
         explanation: "The subarray [5,4,-1,7,8] has the largest sum 23.",
       },
     ],
-    constraints: ["1 ≤ nums.length ≤ 10⁵", "-10⁴ ≤ nums[i] ≤ 10⁴"],
+    constraints: ["1 = nums.length = 105", "-104 = nums[i] = 104"],
     starterCode: {
       javascript: `function maxSubArray(nums) {
     // Write your solution here
@@ -289,7 +289,7 @@ export const PROBLEMS = {
     id: "container-with-most-water",
     title: "Container With Most Water",
     difficulty: "Medium",
-    category: "Array • Two Pointers",
+    category: "Array � Two Pointers",
     description: {
       text: "You are given an integer array height of length n. There are n vertical lines drawn such that the two endpoints of the ith line are (i, 0) and (i, height[i]).",
       notes: [
@@ -310,7 +310,7 @@ export const PROBLEMS = {
         output: "1",
       },
     ],
-    constraints: ["n == height.length", "2 ≤ n ≤ 10⁵", "0 ≤ height[i] ≤ 10⁴"],
+    constraints: ["n == height.length", "2 = n = 105", "0 = height[i] = 104"],
     starterCode: {
       javascript: `function maxArea(height) {
     // Write your solution here
@@ -351,7 +351,7 @@ export const PROBLEMS = {
     id: "merge-sorted-array",
     title: "Merge Sorted Array",
     difficulty: "Easy",
-    category: "Array • Two Pointers",
+    category: "Array � Two Pointers",
     description: {
       text: "You are given two integer arrays nums1 and nums2, sorted in non-decreasing order, and two integers m and n representing the number of elements in nums1 and nums2 respectively.",
       notes: [
@@ -368,7 +368,7 @@ export const PROBLEMS = {
     constraints: [
       "nums1.length == m + n",
       "nums2.length == n",
-      "0 ≤ m, n ≤ 200",
+      "0 = m, n = 200",
     ],
     starterCode: {
       javascript: `function merge(nums1, m, nums2, n) {
@@ -380,7 +380,7 @@ export const PROBLEMS = {
     id: "best-time-to-buy-and-sell-stock",
     title: "Best Time to Buy and Sell Stock",
     difficulty: "Easy",
-    category: "Array • Greedy",
+    category: "Array � Greedy",
     description: {
       text: "You are given an array prices where prices[i] is the price of a given stock on the ith day.",
       notes: [
@@ -393,7 +393,7 @@ export const PROBLEMS = {
         output: "5",
       },
     ],
-    constraints: ["1 ≤ prices.length ≤ 10⁵", "0 ≤ prices[i] ≤ 10⁴"],
+    constraints: ["1 = prices.length = 105", "0 = prices[i] = 104"],
     starterCode: {
       javascript: `function maxProfit(prices) {
   // Write your solution here
@@ -404,7 +404,7 @@ export const PROBLEMS = {
     id: "contains-duplicate",
     title: "Contains Duplicate",
     difficulty: "Easy",
-    category: "Array • Hash Table",
+    category: "Array � Hash Table",
     description: {
       text: "Given an integer array nums, return true if any value appears at least twice in the array.",
       notes: ["Return false if every element is distinct."],
@@ -419,7 +419,7 @@ export const PROBLEMS = {
         output: "false",
       },
     ],
-    constraints: ["1 ≤ nums.length ≤ 10⁵", "-10⁹ ≤ nums[i] ≤ 10⁹"],
+    constraints: ["1 = nums.length = 105", "-10? = nums[i] = 10?"],
     starterCode: {
       javascript: `function containsDuplicate(nums) {
   // Write your solution here
@@ -431,7 +431,7 @@ export const PROBLEMS = {
     id: "product-of-array-except-self",
     title: "Product of Array Except Self",
     difficulty: "Medium",
-    category: "Array • Prefix Sum",
+    category: "Array � Prefix Sum",
     description: {
       text: "Given an integer array nums, return an array answer such that answer[i] is equal to the product of all the elements of nums except nums[i].",
       notes: [
@@ -445,7 +445,7 @@ export const PROBLEMS = {
         output: "[24,12,8,6]",
       },
     ],
-    constraints: ["2 ≤ nums.length ≤ 10⁵", "-30 ≤ nums[i] ≤ 30"],
+    constraints: ["2 = nums.length = 105", "-30 = nums[i] = 30"],
     starterCode: {
       javascript: `function productExceptSelf(nums) {
   // Write your solution here
@@ -456,7 +456,7 @@ export const PROBLEMS = {
     id: "move-zeroes",
     title: "Move Zeroes",
     difficulty: "Easy",
-    category: "Array • Two Pointers",
+    category: "Array � Two Pointers",
     description: {
       text: "Given an integer array nums, move all 0's to the end of it while maintaining the relative order of the non-zero elements.",
       notes: ["You must do this in-place without making a copy of the array."],
@@ -467,7 +467,7 @@ export const PROBLEMS = {
         output: "[1,3,12,0,0]",
       },
     ],
-    constraints: ["1 ≤ nums.length ≤ 10⁴", "-10⁴ ≤ nums[i] ≤ 10⁴"],
+    constraints: ["1 = nums.length = 104", "-104 = nums[i] = 104"],
     starterCode: {
       javascript: `function moveZeroes(nums) {
   // Write your solution here

@@ -1,6 +1,6 @@
 import React from "react";
 import Editor from "@monaco-editor/react";
-import { Loader2Icon, PlayIcon } from "lucide-react";
+import { Loader2Icon, PlayIcon, RotateCcwIcon } from "lucide-react";
 import { LANGUAGE_CONFIG } from "../data/problems";
 
 const CodeEditorPanel = ({
@@ -10,6 +10,7 @@ const CodeEditorPanel = ({
   onLanguageChange,
   onCodeChange,
   onRunCode,
+  onResetCode,
 }) => {
   return (
     <div className="h-full bg-base-300 flex flex-col">
@@ -32,23 +33,35 @@ const CodeEditorPanel = ({
             ))}
           </select>
         </div>
-        <button
-          className="btn btn-primary btn-sm sm:btn-md gap-2 w-full sm:w-auto"
-          disabled={isRunning}
-          onClick={onRunCode}
-        >
-          {isRunning ? (
-            <>
-              <Loader2Icon className="size-4 animate-spin" />
-              Running...
-            </>
-          ) : (
-            <>
-              <PlayIcon className="size-4 " />
-              Run Code
-            </>
+        <div className="flex items-center gap-2 w-full sm:w-auto">
+          {onResetCode && (
+            <button
+              className="btn btn-outline btn-sm sm:btn-md gap-2 flex-1 sm:flex-none"
+              onClick={onResetCode}
+              type="button"
+            >
+              <RotateCcwIcon className="size-4" />
+              Reset
+            </button>
           )}
-        </button>
+          <button
+            className="btn btn-primary btn-sm sm:btn-md gap-2 flex-1 sm:flex-none"
+            disabled={isRunning}
+            onClick={onRunCode}
+          >
+            {isRunning ? (
+              <>
+                <Loader2Icon className="size-4 animate-spin" />
+                Running...
+              </>
+            ) : (
+              <>
+                <PlayIcon className="size-4 " />
+                Run Code
+              </>
+            )}
+          </button>
+        </div>
       </div>
       <div className="flex-1">
         <Editor

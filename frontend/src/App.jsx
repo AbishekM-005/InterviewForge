@@ -7,10 +7,18 @@ import ProblemsPage from "./pages/Problems";
 import { Toaster } from "react-hot-toast";
 import DashBoardPage from "./pages/DashBoardPage";
 import Problem from "./pages/ProblemPage";
+import SessionPage from "./pages/SessionPage";
+import { Loader2Icon } from "lucide-react";
 
 const App = () => {
   const { isSignedIn, isLoaded } = useUser();
-  if (!isLoaded) return null;
+  if (!isLoaded) {
+    return (
+      <div className="min-h-dvh flex items-center justify-center bg-base-200">
+        <Loader2Icon className="size-10 animate-spin text-primary" />
+      </div>
+    );
+  }
 
   return (
     <>
@@ -32,6 +40,11 @@ const App = () => {
           path="/problem/:id"
           element={isSignedIn ? <Problem /> : <Navigate to={"/"} />}
         />
+        <Route
+          path="/session/:id"
+          element={isSignedIn ? <SessionPage /> : <Navigate to={"/"} />}
+        />
+        <Route path="*" element={<Navigate to={isSignedIn ? "/dashboard" : "/"} />} />
       </Routes>
       <Toaster toastOptions={{ duration: 3000 }} />
     </>
