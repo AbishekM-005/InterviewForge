@@ -52,14 +52,6 @@ app.get("/health", (_, res) => {
   res.status(200).json({ msg: "success from api" });
 });
 
-if (ENV.NODE_ENV === "production") {
-  app.use(express.static(path.join(__dirname, "../frontend/dist")));
-
-  app.get("/{*any}", (_, res) => {
-    res.sendFile(path.join(__dirname, "../frontend", "dist", "index.html"));
-  });
-}
-
 app.use((error, _, res, next) => {
   if (error?.message === "Not allowed by CORS") {
     return res.status(403).json({ msg: "Blocked by CORS policy" });
@@ -81,6 +73,13 @@ const startServer = async () => {
 
 app.get("/", (req, res) => {
   res.send("Backend is running");
+});
+
+app.use((req, res) => {
+  res.status(404).json({
+    error: "Route not found",
+    path: req.originalUrl,
+  });
 });
 
 startServer();
