@@ -23,7 +23,11 @@ app.use(express.json({ limit: "100kb" }));
 app.use(
   cors({
     origin: (origin, callback) => {
-      if (!origin || allowedOrigins.length === 0 || allowedOrigins.includes(origin)) {
+      if (
+        !origin ||
+        allowedOrigins.length === 0 ||
+        allowedOrigins.includes(origin)
+      ) {
         return callback(null, true);
       }
 
@@ -74,5 +78,9 @@ const startServer = async () => {
     console.error("Error starting the server, ", error);
   }
 };
+
+app.get("/", (req, res) => {
+  res.send("Backend is running");
+});
 
 startServer();
