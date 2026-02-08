@@ -1,11 +1,19 @@
 ﻿import {
-  CallControls,
+  CancelCallButton,
   CallingState,
+  CompositeButton,
+  Icon,
+  ReactionsButton,
+  ScreenShareButton,
   SpeakerLayout,
+  ToggleAudioPublishingButton,
+  ToggleVideoPublishingButton,
   useCallStateHooks,
 } from "@stream-io/video-react-sdk";
+import { OwnCapability } from "@stream-io/video-client";
+import { Restricted } from "@stream-io/video-react-bindings";
 import { Loader2Icon, MessageSquareIcon, UsersIcon, XIcon } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router";
 import {
   Channel,
@@ -15,6 +23,7 @@ import {
   Thread,
   Window,
 } from "stream-chat-react";
+import toast from "react-hot-toast";
 
 import "@stream-io/video-react-sdk/dist/css/styles.css";
 import "stream-chat-react/dist/css/v2/index.css";
@@ -62,6 +71,11 @@ function VideoCallUI({ chatClient, channel }) {
   const participantCount = useParticipantCount();
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [isDesktop, setIsDesktop] = useState(false);
+  const [isRecording, setIsRecording] = useState(false);
+  const [recordingError, setRecordingError] = useState("");
+  const mediaRecorderRef = useRef(null);
+  const mediaStreamRef = useRef(null);
+  const chunksRef = useRef([]);
   const [debugInfo, setDebugInfo] = useState({
     camera: "unknown",
     microphone: "unknown",
@@ -137,6 +151,136 @@ function VideoCallUI({ chatClient, channel }) {
     updateInfo();
   }, [showDebugPanel]);
 
+  useEffect(() => {
+    if (!recordingError) return;
+
+    const timeout = setTimeout(() => {
+      setRecordingError("");
+    }, 4000);
+
+    return () => clearTimeout(timeout);
+  }, [recordingError]);
+
+  useEffect(() => {
+    return () => {
+      if (isRecording) {
+        stopRecording("call ended");
+      }
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isRecording]);
+
+  const getSupportedRecordingMimeType = () => {
+    if (typeof MediaRecorder === "undefined") return "";
+
+    const candidates = [
+      "video/webm;codecs=vp9,opus",
+      "video/webm;codecs=vp8,opus",
+      "video/webm",
+    ];
+
+    return candidates.find((type) => MediaRecorder.isTypeSupported(type)) || "";
+  };
+
+  const downloadRecording = (blob) => {
+    if (!blob || blob.size === 0) return;
+
+    const url = URL.createObjectURL(blob);
+    const anchor = document.createElement("a");
+    const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
+    anchor.href = url;
+    anchor.download = `interviewforge-recording-${timestamp}.webm`;
+    document.body.appendChild(anchor);
+    anchor.click();
+    document.body.removeChild(anchor);
+    URL.revokeObjectURL(url);
+  };
+
+  const stopRecording = (reason) => {
+    if (!mediaRecorderRef.current) return;
+
+    try {
+      if (mediaRecorderRef.current.state !== "inactive") {
+        mediaRecorderRef.current.stop();
+      }
+    } catch (error) {
+      console.error("Stop recording error:", error);
+    }
+
+    if (mediaStreamRef.current) {
+      mediaStreamRef.current.getTracks().forEach((track) => track.stop());
+    }
+
+    mediaRecorderRef.current = null;
+    mediaStreamRef.current = null;
+    setIsRecording(false);
+    if (reason) {
+      toast.success(`Recording saved (${reason})`);
+    }
+  };
+
+  const startRecording = async () => {
+    setRecordingError("");
+
+    if (!navigator?.mediaDevices?.getDisplayMedia || !window?.MediaRecorder) {
+      setRecordingError("Recording is not supported in this browser.");
+      return;
+    }
+
+    try {
+      const displayStream = await navigator.mediaDevices.getDisplayMedia({
+        video: { frameRate: 30 },
+        audio: true,
+      });
+
+      let micStream = null;
+      try {
+        micStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      } catch (error) {
+        console.warn("Microphone capture unavailable:", error);
+      }
+
+      const tracks = [
+        ...displayStream.getVideoTracks(),
+        ...displayStream.getAudioTracks(),
+        ...(micStream ? micStream.getAudioTracks() : []),
+      ];
+
+      const combinedStream = new MediaStream(tracks);
+      const mimeType = getSupportedRecordingMimeType();
+      const recorder = new MediaRecorder(combinedStream, mimeType ? { mimeType } : {});
+
+      chunksRef.current = [];
+
+      recorder.ondataavailable = (event) => {
+        if (event.data && event.data.size > 0) {
+          chunksRef.current.push(event.data);
+        }
+      };
+
+      recorder.onstop = () => {
+        const blob = new Blob(chunksRef.current, {
+          type: mimeType || "video/webm",
+        });
+        downloadRecording(blob);
+        chunksRef.current = [];
+      };
+
+      displayStream.getVideoTracks()[0]?.addEventListener("ended", () => {
+        stopRecording("screen share ended");
+      });
+
+      mediaRecorderRef.current = recorder;
+      mediaStreamRef.current = combinedStream;
+      recorder.start(1000);
+      setIsRecording(true);
+      toast.success("Recording started");
+    } catch (error) {
+      console.error("Start recording error:", error);
+      setRecordingError("Unable to start recording. Check permissions.");
+    }
+  };
+
   if (callingState === CallingState.JOINING) {
     return (
       <div className="h-full flex items-center justify-center">
@@ -192,8 +336,34 @@ function VideoCallUI({ chatClient, channel }) {
           )}
         </div>
 
-        <div className="bg-base-100 p-2 sm:p-3 rounded-lg shadow flex justify-center sticky bottom-0">
-          <CallControls onLeave={() => navigate("/dashboard")} />
+        <div className="bg-base-100 p-2 sm:p-3 rounded-lg shadow sticky bottom-0">
+          <div className="str-video__call-controls flex flex-wrap items-center justify-center gap-2">
+            <Restricted requiredGrants={[OwnCapability.SEND_AUDIO]}>
+              <ToggleAudioPublishingButton />
+            </Restricted>
+            <Restricted requiredGrants={[OwnCapability.SEND_VIDEO]}>
+              <ToggleVideoPublishingButton />
+            </Restricted>
+            <Restricted requiredGrants={[OwnCapability.CREATE_REACTION]}>
+              <ReactionsButton />
+            </Restricted>
+            <Restricted requiredGrants={[OwnCapability.SCREENSHARE]}>
+              <ScreenShareButton />
+            </Restricted>
+            <CompositeButton
+              active={isRecording}
+              variant="secondary"
+              data-testid={isRecording ? "recording-stop-button" : "recording-start-button"}
+              title={isRecording ? "Stop recording" : "Start recording"}
+              onClick={() => (isRecording ? stopRecording("manual stop") : startRecording())}
+            >
+              <Icon icon={isRecording ? "recording-on" : "recording-off"} />
+            </CompositeButton>
+            <CancelCallButton onLeave={() => navigate("/dashboard")} />
+          </div>
+          {recordingError ? (
+            <p className="mt-2 text-center text-xs text-error">{recordingError}</p>
+          ) : null}
         </div>
       </div>
 
