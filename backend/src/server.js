@@ -13,7 +13,7 @@ const app = express();
 
 const __dirname = path.resolve();
 
-const allowedOrigins = (ENV.CLIENT_URL || "")
+const allowedOrigins = (ENV.CLIENT_URL || ENV.CLIENT_URL)
   .split(",")
   .map((origin) => origin.trim())
   .filter(Boolean);
