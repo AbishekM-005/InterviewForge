@@ -177,10 +177,11 @@ function SessionPage() {
     <div className="min-h-dvh bg-base-100 flex flex-col">
       <NavBar />
 
-      <div className="flex-1 min-h-0">
+      <div className="flex-1 min-h-0 overflow-hidden">
         {isMobile ? (
-          <PanelGroup direction="vertical" className="h-full min-h-0">
-            <Panel defaultSize={40} minSize={25} className="min-h-0">
+          <div className="h-[calc(100dvh-72px)] min-h-0">
+            <PanelGroup direction="vertical" className="h-full min-h-0">
+              <Panel defaultSize={40} minSize={25} className="h-full min-h-0">
               <div className="h-full min-h-0 p-2 sm:p-4">
                 <div className="bg-base-200 p-2 sm:p-4 rounded-xl h-full min-h-0">
                   {isInitializingCall ? (
@@ -215,14 +216,14 @@ function SessionPage() {
                   )}
                 </div>
               </div>
-            </Panel>
+              </Panel>
 
-            <PanelResizeHandle className="h-4 bg-base-300 hover:bg-primary/70 transition-colors cursor-row-resize flex items-center justify-center">
-              <span className="h-1.5 w-12 rounded-full bg-base-content/30" />
-            </PanelResizeHandle>
+              <PanelResizeHandle className="h-4 bg-base-300 hover:bg-primary/70 transition-colors cursor-row-resize flex items-center justify-center">
+                <span className="h-1.5 w-12 rounded-full bg-base-content/30" />
+              </PanelResizeHandle>
 
-            <Panel defaultSize={60} minSize={25} className="min-h-0">
-              <div className="h-full min-h-0 overflow-y-auto p-2 sm:p-4 flex flex-col gap-4">
+              <Panel defaultSize={60} minSize={25} className="h-full min-h-0">
+                <div className="h-full min-h-0 overflow-y-auto p-2 sm:p-4 flex flex-col gap-4">
                 <div className="bg-base-100 border border-base-300 rounded-xl p-4">
                   <div className="flex flex-col gap-3">
                     <div>
@@ -372,9 +373,10 @@ function SessionPage() {
                 <div className="bg-base-100 rounded-xl border border-base-300 overflow-hidden">
                   <OutputPanel output={output} />
                 </div>
-              </div>
-            </Panel>
-          </PanelGroup>
+                </div>
+              </Panel>
+            </PanelGroup>
+          </div>
         ) : (
           <PanelGroup direction="horizontal" className="h-full min-h-0">
             <Panel defaultSize={50} minSize={30} className="min-h-0">
