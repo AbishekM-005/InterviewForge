@@ -9,4 +9,16 @@ const axiosInstance = axios.create({
   },
 });
 
+axiosInstance.interceptors.request.use(async (config) => {
+  const clerk = window?.Clerk;
+  if (clerk?.session) {
+    const token = await clerk.session.getToken();
+    if (token) {
+      config.headers = config.headers || {};
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+  }
+  return config;
+});
+
 export default axiosInstance;

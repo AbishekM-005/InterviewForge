@@ -30,24 +30,29 @@ export async function createSession(req, res) {
       callId,
     });
 
-    await streamClient.video.call("default", callId).getOrCreate({
-      data: {
-        created_by_id: clerkId,
-        custom: {
-          problem: normalizedProblem,
-          difficulty: normalizedDifficulty,
-          sessionId: session._id.toString(),
+    try {
+      await streamClient.video.call("default", callId).getOrCreate({
+        data: {
+          created_by_id: clerkId,
+          custom: {
+            problem: normalizedProblem,
+            difficulty: normalizedDifficulty,
+            sessionId: session._id.toString(),
+          },
         },
-      },
-    });
+      });
 
-    const channel = chatClient.channel("messaging", callId, {
-      name: `${normalizedProblem} Session`,
-      created_by_id: clerkId,
-      members: [clerkId],
-    });
+      const channel = chatClient.channel("messaging", callId, {
+        name: `${normalizedProblem} Session`,
+        created_by_id: clerkId,
+        members: [clerkId],
+      });
 
-    await channel.create();
+      await channel.create();
+    } catch (streamError) {
+      await Session.findByIdAndDelete(session._id);
+      throw streamError;
+    }
     res.status(201).json({ session });
   } catch (error) {
     console.error("Error in createSession controller : ", error);
