@@ -13,21 +13,27 @@ const app = express();
 
 const __dirname = path.resolve();
 
-const allowedOrigins = (ENV.CLIENT_URL || ENV.CLIENT_URL)
+const baseOrigins = (ENV.CLIENT_URL || "")
   .split(",")
   .map((origin) => origin.trim())
   .filter(Boolean);
+
+const devOrigins = [
+  "http://localhost:5173",
+  "http://127.0.0.1:5173",
+  "http://localhost:3000",
+  "http://127.0.0.1:3000",
+];
+
+const allowedOrigins =
+  ENV.NODE_ENV === "production" ? baseOrigins : [...baseOrigins, ...devOrigins];
 
 app.disable("x-powered-by");
 app.use(express.json({ limit: "100kb" }));
 app.use(
   cors({
     origin: (origin, callback) => {
-      if (
-        !origin ||
-        allowedOrigins.length === 0 ||
-        allowedOrigins.includes(origin)
-      ) {
+      if (!origin || allowedOrigins.includes(origin)) {
         return callback(null, true);
       }
 

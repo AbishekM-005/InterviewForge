@@ -12,18 +12,26 @@ const CodeEditorPanel = ({
   onRunCode,
   onResetCode,
 }) => {
+  const languageKeys = Object.keys(LANGUAGE_CONFIG);
+  const languageKey = LANGUAGE_CONFIG[selectedLanguage]
+    ? selectedLanguage
+    : languageKeys[0];
+  const languageConfig = LANGUAGE_CONFIG[languageKey];
+
   return (
     <div className="h-full bg-base-300 flex flex-col">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 px-4 py-3 bg-base-100 border-t border-base-300">
         <div className="flex items-center gap-3">
-          <img
-            src={LANGUAGE_CONFIG[selectedLanguage].icon}
-            alt={LANGUAGE_CONFIG[selectedLanguage].name}
-            className="size-5 sm:size-6"
-          />
+          {languageConfig && (
+            <img
+              src={languageConfig.icon}
+              alt={languageConfig.name}
+              className="size-5 sm:size-6"
+            />
+          )}
           <select
             className="select select-sm sm:select-md"
-            value={selectedLanguage}
+            value={languageKey}
             onChange={onLanguageChange}
           >
             {Object.entries(LANGUAGE_CONFIG).map(([key, lang]) => (
@@ -66,7 +74,7 @@ const CodeEditorPanel = ({
       <div className="flex-1">
         <Editor
           height={"100%"}
-          language={LANGUAGE_CONFIG[selectedLanguage].monacoLang}
+          language={languageConfig?.monacoLang}
           value={code}
           onChange={onCodeChange}
           theme="vs-dark"
