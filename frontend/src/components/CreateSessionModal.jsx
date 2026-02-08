@@ -36,7 +36,7 @@ const CreateSessionModal = ({
                 const selectedProblem = problems.find(
                   (p) => p.title === e.target.value
                 );
-                console.log(selectedProblem);
+                if (!selectedProblem) return;
                 setRoomConfig({
                   difficulty: selectedProblem.difficulty,
                   problem: e.target.value,
@@ -75,7 +75,7 @@ const CreateSessionModal = ({
         </div>
 
         <div className="modal-action">
-          <button className="btn gtn-ghost" onClick={onClose}>
+          <button className="btn btn-ghost" onClick={onClose}>
             Cancel
           </button>
           <button

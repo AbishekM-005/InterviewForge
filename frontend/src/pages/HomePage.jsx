@@ -10,11 +10,10 @@ import {
   UsersIcon,
 } from "lucide-react";
 import { SignInButton } from "@clerk/clerk-react";
-import NavBar from "../components/NavBar";
 
 const HomePage = () => {
   return (
-    <div className="bg-gradient-to-br from-base-100 via-base-200 to-base-300">
+    <div className="min-h-dvh bg-gradient-to-br from-base-100 via-base-200 to-base-300">
       {/* NAVBAR */}
       <nav className="bg-base-100/60 backdrop-blur-md border-b border-primary/20 sticky top-0 z-50 shadow-lg">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between gap-3">
@@ -96,10 +95,10 @@ const HomePage = () => {
                 </button>
               </SignInButton>
 
-              <button className="btn btn-outline btn-lg">
+              <a href="#features" className="btn btn-outline btn-lg">
                 <VideoIcon className="size-5" />
                 Watch Demo
-              </button>
+              </a>
             </div>
 
             {/* STATS */}
@@ -128,7 +127,10 @@ const HomePage = () => {
         </div>
 
         {/* FEATURES SECTION */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20">
+        <div
+          id="features"
+          className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20"
+        >
           <div className="text-center mb-16">
             <h2 className="text-3xl sm:text-4xl font-bold mb-4">
               Everything you need to{" "}
@@ -174,7 +176,7 @@ const HomePage = () => {
                 <div className="size-16 bg-primary/10 rounded-2xl flex items-center justify-center mb-4">
                   <UsersIcon className="size-8 text-primary" />
                 </div>
-                <h3 className="card-title">HD Video Call</h3>
+                <h3 className="card-title">Pair Programming</h3>
                 <p className="text-base-content/70">
                   Share your screen, discuss solutions, and learn from each
                   other in real-time

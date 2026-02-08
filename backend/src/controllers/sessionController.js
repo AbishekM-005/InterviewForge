@@ -1,26 +1,31 @@
-import { StreamVideoClient } from "@stream-io/node-sdk";
+import { randomUUID } from "crypto";
 import { chatClient, streamClient } from "../lib/stream.js";
 import Session from "../models/Session.js";
+import {
+  isValidObjectId,
+  normalizeDifficulty,
+  sanitizeProblemTitle,
+} from "../lib/validators.js";
 
 export async function createSession(req, res) {
   try {
     const { problem, difficulty } = req.body;
     const userId = req.user._id;
     const clerkId = req.user.clerkId;
+    const normalizedProblem = sanitizeProblemTitle(problem);
+    const normalizedDifficulty = normalizeDifficulty(difficulty);
 
-    if (!problem || !difficulty) {
+    if (!normalizedProblem || !normalizedDifficulty) {
       return res
         .status(400)
-        .json({ msg: "Problem and difficulty are required" });
+        .json({ msg: "Valid problem and difficulty are required" });
     }
 
-    const callId = `session_${Date.now()}_${Math.random()
-      .toString(36)
-      .substring(2, 9)}`;
+    const callId = `session_${randomUUID()}`;
 
     const session = await Session.create({
-      problem,
-      difficulty,
+      problem: normalizedProblem,
+      difficulty: normalizedDifficulty,
       host: userId,
       callId,
     });
@@ -28,12 +33,16 @@ export async function createSession(req, res) {
     await streamClient.video.call("default", callId).getOrCreate({
       data: {
         created_by_id: clerkId,
-        custom: { problem, difficulty, sessionId: session._id.toString() },
+        custom: {
+          problem: normalizedProblem,
+          difficulty: normalizedDifficulty,
+          sessionId: session._id.toString(),
+        },
       },
     });
 
     const channel = chatClient.channel("messaging", callId, {
-      name: `${problem} Session`,
+      name: `${normalizedProblem} Session`,
       created_by_id: clerkId,
       members: [clerkId],
     });
@@ -83,11 +92,32 @@ export async function getMyRecentSessions(req, res) {
 export async function getSessionById(req, res) {
   try {
     const { id } = req.params;
+
+    if (!isValidObjectId(id)) {
+      return res.status(400).json({ msg: "Invalid session id" });
+    }
+
     const session = await Session.findById(id)
       .populate("host", "name email profileImage clerkId")
       .populate("participant", "name email profileImage clerkId");
 
-    if (!session) return res.status(404).json({ message: "Session not found" });
+    if (!session) return res.status(404).json({ msg: "Session not found" });
+
+    const userId = req.user._id.toString();
+    const isMember =
+      session.host?._id?.toString() === userId ||
+      session.participant?._id?.toString() === userId;
+
+    if (!isMember) {
+      if (session.status !== "active" || session.participant) {
+        return res.status(403).json({ msg: "You cannot access this session" });
+      }
+
+      const publicSession = session.toObject();
+      delete publicSession.callId;
+      return res.status(200).json({ session: publicSession });
+    }
+
     res.status(200).json({ session });
   } catch (error) {
     console.error("Error in getSessionById controller : ", error.message);
@@ -100,6 +130,10 @@ export async function joinSession(req, res) {
     const { id } = req.params;
     const userId = req.user._id;
     const { clerkId } = req.user;
+
+    if (!isValidObjectId(id)) {
+      return res.status(400).json({ msg: "Invalid session id" });
+    }
 
     const session = await Session.findById(id);
 
@@ -118,13 +152,40 @@ export async function joinSession(req, res) {
     if (session.participant)
       return res.status(409).json({ msg: "Session is full" });
 
-    session.participant = userId;
-    await session.save();
+    const joinedSession = await Session.findOneAndUpdate(
+      {
+        _id: id,
+        status: "active",
+        participant: null,
+      },
+      {
+        $set: { participant: userId },
+      },
+      {
+        new: true,
+      }
+    );
 
-    const channel = chatClient.channel("messaging", session.callId);
-    await channel.addMembers({ clerkId });
+    if (!joinedSession) {
+      return res.status(409).json({ msg: "Session is already full" });
+    }
 
-    res.status(200).json({ session });
+    try {
+      const channel = chatClient.channel("messaging", joinedSession.callId);
+      await channel.addMembers([clerkId]);
+    } catch (streamError) {
+      await Session.updateOne(
+        { _id: id, participant: userId },
+        { $set: { participant: null } }
+      );
+      throw streamError;
+    }
+
+    const populatedSession = await Session.findById(id)
+      .populate("host", "name email profileImage clerkId")
+      .populate("participant", "name email profileImage clerkId");
+
+    res.status(200).json({ session: populatedSession });
   } catch (error) {
     console.error("Error in joinSession controller : ", error.message);
     res.status(500).json({ msg: "Internal Server Error" });
@@ -135,6 +196,10 @@ export async function endSession(req, res) {
   try {
     const { id } = req.params;
     const userId = req.user._id;
+
+    if (!isValidObjectId(id)) {
+      return res.status(400).json({ msg: "Invalid session id" });
+    }
 
     const session = await Session.findById(id);
 
@@ -150,17 +215,25 @@ export async function endSession(req, res) {
       return res.status(400).json({ msg: "Session is already completed" });
     }
 
-    //delete stream video call
-    const call = streamClient.video.call("default", session.callId);
-    await call.delete({ hard: true });
+    session.status = "completed";
+    await session.save();
 
-    //delete stream chat
+    const cleanupTasks = [];
+
+    const call = streamClient.video.call("default", session.callId);
+    cleanupTasks.push(call.delete({ hard: true }));
 
     const channel = chatClient.channel("messaging", session.callId);
-    channel.delete();
+    cleanupTasks.push(channel.delete());
 
-    session.status = "completed";
-    session.save();
+    const cleanupResults = await Promise.allSettled(cleanupTasks);
+    const hasCleanupFailure = cleanupResults.some(
+      (task) => task.status === "rejected"
+    );
+
+    if (hasCleanupFailure) {
+      console.error("Stream cleanup failed for session: ", session._id);
+    }
 
     res.status(200).json({ session, msg: "Session ended successfully" });
   } catch (error) {

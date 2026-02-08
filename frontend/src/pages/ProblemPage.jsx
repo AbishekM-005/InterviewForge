@@ -13,11 +13,12 @@ import confetti from "canvas-confetti";
 const Problem = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const initialProblemId = id && PROBLEMS[id] ? id : "two-sum";
 
-  const [currentProblemId, setCurrentProblemId] = useState("two-sum");
+  const [currentProblemId, setCurrentProblemId] = useState(initialProblemId);
   const [selectedLanguage, setSelectedLanguage] = useState("javascript");
   const [code, setCode] = useState(
-    PROBLEMS[currentProblemId].starterCode.javascript
+    PROBLEMS[initialProblemId].starterCode.javascript
   );
   const [output, setOutput] = useState(null);
   const [isRunning, setIsRunning] = useState(false);
@@ -27,12 +28,20 @@ const Problem = () => {
 
   //update when url changes
   useEffect(() => {
-    if (id && PROBLEMS[id]) {
-      setCurrentProblemId(id);
-      setCode(PROBLEMS[id].starterCode[selectedLanguage]);
-      setOutput(null);
+    if (!id || !PROBLEMS[id]) {
+      navigate("/problem/two-sum", { replace: true });
+      return;
     }
-  }, [id, selectedLanguage]);
+
+    const selectedProblem = PROBLEMS[id];
+    const hasSelectedLanguage = Boolean(selectedProblem.starterCode[selectedLanguage]);
+    const nextLanguage = hasSelectedLanguage ? selectedLanguage : "javascript";
+
+    setCurrentProblemId(id);
+    setSelectedLanguage(nextLanguage);
+    setCode(selectedProblem.starterCode[nextLanguage] || "");
+    setOutput(null);
+  }, [id, selectedLanguage, navigate]);
 
   useEffect(() => {
     const media = window.matchMedia("(max-width: 1024px)");
@@ -51,7 +60,7 @@ const Problem = () => {
   const handleLanguageChange = (e) => {
     const newLang = e.target.value;
     setSelectedLanguage(newLang);
-    setCode(currentProblem.starterCode[newLang]);
+    setCode(currentProblem.starterCode[newLang] || "");
     setOutput(null);
   };
 
@@ -75,8 +84,9 @@ const Problem = () => {
 
   const normalizeOutput = (output) => {
     //Just to normalize output for comparison
+    const safeOutput = typeof output === "string" ? output : "";
 
-    return output
+    return safeOutput
       .trim()
       .split("\n")
       .map((line) =>
@@ -95,7 +105,7 @@ const Problem = () => {
   const checkIfTestsPassed = (actualOutput, expectedOutput) => {
     const normalizedActual = normalizeOutput(actualOutput);
     const normalizedExpected = normalizeOutput(expectedOutput);
-    return normalizedActual == normalizedExpected;
+    return normalizedActual === normalizedExpected;
   };
 
   const handleRunCode = async () => {
@@ -109,6 +119,11 @@ const Problem = () => {
 
     if (result.success) {
       const expectedOutput = currentProblem.expectedOutput[selectedLanguage];
+      if (!expectedOutput) {
+        toast.success("Code executed successfully");
+        return;
+      }
+
       const testsPassed = checkIfTestsPassed(result.output, expectedOutput);
 
       if (testsPassed) {
@@ -122,10 +137,15 @@ const Problem = () => {
     }
   };
 
+  const handleResetCode = () => {
+    setCode(currentProblem.starterCode[selectedLanguage] || "");
+    setOutput(null);
+  };
+
   return (
-    <div className="h-screen  bg-base-100 flex flex-col">
+    <div className="min-h-dvh bg-base-100 flex flex-col">
       <NavBar />
-      <div className="flex-1">
+      <div className="flex-1 min-h-0">
         <PanelGroup direction={isMobile ? "vertical" : "horizontal"}>
           {/* Left panel - problem description */}
           <Panel defaultSize={isMobile ? 45 : 40} minSize={30}>
@@ -152,8 +172,9 @@ const Problem = () => {
                   code={code}
                   isRunning={isRunning}
                   onLanguageChange={handleLanguageChange}
-                  onCodeChange={setCode}
+                  onCodeChange={(value) => setCode(value || "")}
                   onRunCode={handleRunCode}
+                  onResetCode={handleResetCode}
                 />
               </Panel>
 

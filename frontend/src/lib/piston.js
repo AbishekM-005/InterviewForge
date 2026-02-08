@@ -25,11 +25,29 @@ export async function executeCode(language, code) {
       };
     }
 
+    if (typeof code !== "string" || code.trim().length === 0) {
+      return {
+        success: false,
+        error: "Code is required",
+      };
+    }
+
+    if (code.length > 20000) {
+      return {
+        success: false,
+        error: "Code is too large to execute",
+      };
+    }
+
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 20000);
+
     const response = await fetch(`${PISTON_API}/execute`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
+      signal: controller.signal,
       body: JSON.stringify({
         language: languageConfig.language,
         version: languageConfig.version,
@@ -41,10 +59,11 @@ export async function executeCode(language, code) {
         ],
       }),
     });
+    clearTimeout(timeoutId);
 
-    if (!response) {
+    if (!response.ok) {
       return {
-        success: "false",
+        success: false,
         error: `HTTP error! status : ${response.status}`,
       };
     }
@@ -55,14 +74,14 @@ export async function executeCode(language, code) {
     const stderr = data.run.stderr || "";
 
     if (stderr) {
-      return { success: false, output: false, error: stderr };
+      return { success: false, error: stderr };
     }
 
     return { success: true, output: output || "No Output" };
   } catch (error) {
     return {
       success: false,
-      error: `Failed  to execute code:${error.message}`,
+      error: `Failed to execute code: ${error.message}`,
     };
   }
 }

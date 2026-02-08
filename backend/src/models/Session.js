@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const sessionSchema = new mongoose.Schema(
   {
-    problem: { type: String, required: true },
+    problem: { type: String, required: true, trim: true, maxlength: 140 },
     difficulty: {
       type: String,
       enum: ["easy", "medium", "hard"],
@@ -27,10 +27,14 @@ const sessionSchema = new mongoose.Schema(
     callId: {
       type: String,
       default: "",
+      unique: true,
+      index: true,
     },
   },
   { timestamps: true }
 );
+
+sessionSchema.index({ status: 1, createdAt: -1 });
 
 const Session = mongoose.model("Session", sessionSchema);
 

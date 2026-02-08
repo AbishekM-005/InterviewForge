@@ -2,6 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router";
 import { useUser } from "@clerk/clerk-react";
 import { useState } from "react";
+import { RefreshCwIcon } from "lucide-react";
 import {
   useCreateSession,
   useMyRecentSessions,
@@ -22,10 +23,18 @@ const DashBoardPage = () => {
 
   const createSessionMutation = useCreateSession();
 
-  const { data: activeSessionsData, isLoading: loadingActiveSessions } =
-    useActiveSessions();
-  const { data: recentSessionsData, isLoading: loadingRecentSessions } =
-    useMyRecentSessions();
+  const {
+    data: activeSessionsData,
+    isLoading: loadingActiveSessions,
+    isFetching: fetchingActiveSessions,
+    refetch: refetchActiveSessions,
+  } = useActiveSessions();
+  const {
+    data: recentSessionsData,
+    isLoading: loadingRecentSessions,
+    isFetching: fetchingRecentSessions,
+    refetch: refetchRecentSessions,
+  } = useMyRecentSessions();
 
   const handleCreateRoom = () => {
     if (!roomConfig.problem || !roomConfig.difficulty) return;
@@ -46,6 +55,7 @@ const DashBoardPage = () => {
 
   const activeSessions = activeSessionsData?.sessions || [];
   const recentSessions = recentSessionsData?.sessions || [];
+  const isRefreshing = fetchingActiveSessions || fetchingRecentSessions;
 
   const isUserInSession = (session) => {
     if (!user?.id) return false;
@@ -57,54 +67,64 @@ const DashBoardPage = () => {
   };
 
   return (
-    <div>
-      <>
-        <div className="min-h-screen bg-base-300">
-          <NavBar />
-          <WelcomeSection
-            onCreateSession={() => {
-              setShowCreateModal(true);
+    <div className="min-h-dvh bg-base-300">
+      <NavBar />
+      <WelcomeSection
+        onCreateSession={() => {
+          setShowCreateModal(true);
+        }}
+      />
+      <div className="container mx-auto px-4 sm:px-6 pb-16">
+        <div className="mb-4 flex justify-end">
+          <button
+            type="button"
+            className="btn btn-outline btn-sm gap-2"
+            onClick={() => {
+              refetchActiveSessions();
+              refetchRecentSessions();
             }}
-          />
-          {/* GRID LAYOUT */}
-          <div className="container mx-auto px-4 sm:px-6 pb-16">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              <div className="lg:col-span-1">
-                <StatsCards
-                  activeSessionsCount={activeSessions.length}
-                  recentSessionsCount={recentSessions.length}
-                />
-              </div>
-              <div className="lg:col-span-2">
-                <ActiveSessions
-                  sessions={activeSessions}
-                  isLoading={loadingActiveSessions}
-                  isUserInSession={isUserInSession}
-                />
-              </div>
-            </div>
+            disabled={isRefreshing}
+          >
+            <RefreshCwIcon
+              className={`size-4 ${isRefreshing ? "animate-spin" : ""}`}
+            />
+            Refresh Data
+          </button>
+        </div>
 
-            <RecentSessions
-              sessions={recentSessions}
-              isLoading={loadingRecentSessions}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="lg:col-span-1">
+            <StatsCards
+              activeSessionsCount={activeSessions.length}
+              recentSessionsCount={recentSessions.length}
+            />
+          </div>
+          <div className="lg:col-span-2">
+            <ActiveSessions
+              sessions={activeSessions}
+              isLoading={loadingActiveSessions}
+              isUserInSession={isUserInSession}
             />
           </div>
         </div>
-        <CreateSessionModal
-          isOpen={showCreateModal}
-          onClose={() => {
-            setShowCreateModal(false);
-          }}
-          roomConfig={roomConfig}
-          onCreateRoom={handleCreateRoom}
-          isCreating={createSessionMutation.isPending}
-          setRoomConfig={setRoomConfig}
+
+        <RecentSessions
+          sessions={recentSessions}
+          isLoading={loadingRecentSessions}
         />
-      </>
+      </div>
+      <CreateSessionModal
+        isOpen={showCreateModal}
+        onClose={() => {
+          setShowCreateModal(false);
+        }}
+        roomConfig={roomConfig}
+        onCreateRoom={handleCreateRoom}
+        isCreating={createSessionMutation.isPending}
+        setRoomConfig={setRoomConfig}
+      />
     </div>
   );
 };
 
 export default DashBoardPage;
-
-//write a console.log

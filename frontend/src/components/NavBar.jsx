@@ -27,10 +27,11 @@ const NavBar = () => {
           </div>
         </Link>
 
-        <div className="flex items-center gap-1 sm:gap-2 flex-wrap justify-end">
+        <div className="flex items-center gap-1 sm:gap-2 flex-nowrap justify-end overflow-x-auto">
           {/* PROBLEMS PAGE LINK */}
           <Link
             to={"/problems"}
+            aria-label="Problems"
             className={`px-4 py-2.5 rounded-lg transition-all duration-200 ${
               isActive("/problems")
                 ? "bg-primary text-primary-content "
@@ -45,6 +46,7 @@ const NavBar = () => {
 
           <Link
             to={"/dashboard"}
+            aria-label="Dashboard"
             className={`px-4 py-2.5 rounded-lg transition-all duration-200 ${
               isActive("/dashboard")
                 ? "bg-primary text-primary-content "
