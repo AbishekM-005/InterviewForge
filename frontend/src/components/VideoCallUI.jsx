@@ -3,9 +3,10 @@
   CallingState,
   CompositeButton,
   Icon,
+  ParticipantsAudio,
+  ParticipantView,
   ReactionsButton,
   ScreenShareButton,
-  SpeakerLayout,
   ToggleAudioPublishingButton,
   ToggleVideoPublishingButton,
   useCallStateHooks,
@@ -66,9 +67,12 @@ const copyTextToClipboard = async (text) => {
 
 function VideoCallUI({ chatClient, channel }) {
   const navigate = useNavigate();
-  const { useCallCallingState, useParticipantCount } = useCallStateHooks();
+  const { useCallCallingState, useParticipantCount, useParticipants, useRemoteParticipants } =
+    useCallStateHooks();
   const callingState = useCallCallingState();
   const participantCount = useParticipantCount();
+  const participants = useParticipants();
+  const remoteParticipants = useRemoteParticipants();
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [isDesktop, setIsDesktop] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
@@ -160,6 +164,53 @@ function VideoCallUI({ chatClient, channel }) {
 
     return () => clearTimeout(timeout);
   }, [recordingError]);
+
+  const orderedParticipants = useMemo(() => {
+    if (!participants?.length) return [];
+    const locals = [];
+    const remotes = [];
+    participants.forEach((p) => (p.isLocalParticipant ? locals.push(p) : remotes.push(p)));
+    return [...remotes, ...locals];
+  }, [participants]);
+
+  const [activeIndex, setActiveIndex] = useState(0);
+  const touchStartX = useRef(null);
+
+  useEffect(() => {
+    if (orderedParticipants.length === 0) return;
+    const remoteIndex = orderedParticipants.findIndex((p) => !p.isLocalParticipant);
+    setActiveIndex(remoteIndex >= 0 ? remoteIndex : 0);
+  }, [orderedParticipants.length]);
+
+  const goPrev = () => {
+    setActiveIndex((prev) =>
+      orderedParticipants.length === 0 ? 0 : (prev - 1 + orderedParticipants.length) % orderedParticipants.length
+    );
+  };
+
+  const goNext = () => {
+    setActiveIndex((prev) =>
+      orderedParticipants.length === 0 ? 0 : (prev + 1) % orderedParticipants.length
+    );
+  };
+
+  const handleTouchStart = (event) => {
+    touchStartX.current = event.touches?.[0]?.clientX ?? null;
+  };
+
+  const handleTouchEnd = (event) => {
+    if (touchStartX.current === null) return;
+    const endX = event.changedTouches?.[0]?.clientX ?? null;
+    if (endX === null) return;
+    const delta = endX - touchStartX.current;
+    touchStartX.current = null;
+    if (Math.abs(delta) < 40) return;
+    if (delta > 0) {
+      goPrev();
+    } else {
+      goNext();
+    }
+  };
 
   useEffect(() => {
     return () => {
@@ -318,8 +369,35 @@ function VideoCallUI({ chatClient, channel }) {
           )}
         </div>
 
-        <div className="flex-1 min-h-[320px] sm:min-h-[360px] lg:min-h-0 bg-base-300 rounded-lg overflow-hidden relative aspect-auto h-full video-spotlight-scroll">
-          <SpeakerLayout participantsBarPosition="bottom" participantsBarLimit="dynamic" />
+        <div
+          className="flex-1 min-h-[320px] sm:min-h-[360px] lg:min-h-0 bg-base-300 rounded-lg overflow-hidden relative aspect-auto h-full video-carousel-layout"
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
+        >
+          <ParticipantsAudio participants={remoteParticipants} />
+          {orderedParticipants[activeIndex] ? (
+            <ParticipantView participant={orderedParticipants[activeIndex]} muteAudio />
+          ) : null}
+          {orderedParticipants.length > 1 && (
+            <div className="video-carousel-controls">
+              <button
+                type="button"
+                className="video-carousel-btn"
+                onClick={goPrev}
+                aria-label="Previous participant"
+              >
+                ‹
+              </button>
+              <button
+                type="button"
+                className="video-carousel-btn"
+                onClick={goNext}
+                aria-label="Next participant"
+              >
+                ›
+              </button>
+            </div>
+          )}
           {showDebugPanel && (
             <div className="absolute bottom-2 left-2 right-2 z-10 bg-black/70 text-white text-xs rounded-md p-2 space-y-1">
               <div className="font-semibold">Debug (video)</div>
