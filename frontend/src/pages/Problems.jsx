@@ -1,10 +1,11 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import NavBar from "../components/NavBar.jsx";
 import { Link } from "react-router";
 import { PROBLEMS } from "../data/problems.js";
 import { ChevronRightIcon, Code2Icon, SearchIcon } from "lucide-react";
 import { getDifficultyBadgeClass } from "../lib/utils.js";
 import { useActiveSessions } from "../hooks/useSessions.js";
+import { getSolvedProblemIds } from "../lib/solvedProblems.js";
 
 const difficultyOptions = ["All", "Easy", "Medium", "Hard"];
 
@@ -15,6 +16,7 @@ const ProblemsPage = () => {
   const allProblems = useMemo(() => Object.values(PROBLEMS), []);
   const { data: activeSessionsData } = useActiveSessions();
   const activeSessions = activeSessionsData?.sessions || [];
+  const [solvedProblemIds, setSolvedProblemIds] = useState([]);
 
   const activeSessionCountByTitle = useMemo(() => {
     return activeSessions.reduce((accumulator, session) => {
@@ -43,6 +45,15 @@ const ProblemsPage = () => {
     });
   }, [allProblems, searchQuery, difficultyFilter]);
 
+  useEffect(() => {
+    const syncSolved = () => setSolvedProblemIds(getSolvedProblemIds());
+    syncSolved();
+    window.addEventListener("storage", syncSolved);
+    return () => window.removeEventListener("storage", syncSolved);
+  }, []);
+
+  const solvedProblemIdSet = useMemo(() => new Set(solvedProblemIds), [solvedProblemIds]);
+  const solvedCount = solvedProblemIdSet.size;
   const easyProblemsCount = allProblems.filter(
     (problem) => problem.difficulty === "Easy"
   ).length;
@@ -95,6 +106,7 @@ const ProblemsPage = () => {
           {filteredProblems.length > 0 ? (
             filteredProblems.map((problem) => {
               const activeCount = activeSessionCountByTitle[problem.title] || 0;
+              const isSolved = solvedProblemIdSet.has(problem.id);
 
               return (
                 <Link
@@ -117,6 +129,11 @@ const ProblemsPage = () => {
                               >
                                 {problem.difficulty}
                               </span>
+                              {isSolved && (
+                                <span className="badge badge-info badge-outline">
+                                  Solved
+                                </span>
+                              )}
                               {activeCount > 0 && (
                                 <span className="badge badge-primary badge-outline">
                                   {activeCount} live
@@ -155,6 +172,12 @@ const ProblemsPage = () => {
         <div className="mt-12 card bg-base-100 shadow-lg">
           <div className="card-body">
             <div className="stats stats-vertical lg:stats-horizontal">
+              <div className="stat flex flex-col items-center">
+                <div className="stat-title">Solved</div>
+                <div className="stat-value text-secondary">
+                  {solvedCount}/{allProblems.length}
+                </div>
+              </div>
               <div className="stat flex flex-col items-center">
                 <div className="stat-title">Total Problems</div>
                 <div className="stat-value text-primary">{allProblems.length}</div>

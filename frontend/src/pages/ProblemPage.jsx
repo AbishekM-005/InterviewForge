@@ -7,6 +7,7 @@ import ProblemDescription from "../components/problemDescription.jsx";
 import CodeEditorPanel from "../components/CodeEditorPanel.jsx";
 import OutputPanel from "../components/OutputPanel.jsx";
 import { executeCode } from "../lib/piston.js";
+import { markProblemSolved } from "../lib/solvedProblems.js";
 import toast from "react-hot-toast";
 import confetti from "canvas-confetti";
 
@@ -129,6 +130,7 @@ const Problem = () => {
       if (testsPassed) {
         toast.success("All tests passed! Great job!");
         triggerConfetti();
+        markProblemSolved(currentProblemId);
       } else {
         toast.error("Tests failed. Check out your code");
       }
