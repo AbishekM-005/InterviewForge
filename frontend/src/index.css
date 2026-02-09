@@ -27,9 +27,15 @@
 }
 
 /* Video call layout sizing */
+.session-page {
+  height: 100dvh;
+  min-height: 0;
+  overflow: hidden;
+}
+
 .video-call-ui {
   height: 100%;
-  max-height: 100dvh;
+  min-height: 0;
   overflow: hidden;
 }
 
@@ -38,9 +44,22 @@
   overflow: hidden;
 }
 
+.video-call-header {
+  flex: 0 0 auto;
+}
+
 .video-stage {
+  flex: 1 1 0;
   min-height: 0;
   overflow: hidden;
+}
+
+.video-call-controls {
+  flex: 0 0 auto;
+  position: sticky;
+  bottom: 0;
+  z-index: 5;
+  padding-bottom: calc(0.5rem + env(safe-area-inset-bottom));
 }
 
 /* Stream Video layout fill fixes */

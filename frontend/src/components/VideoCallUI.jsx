@@ -414,7 +414,7 @@ function VideoCallUI({ chatClient, channel }) {
           )}
         </div>
 
-        <div className="bg-base-100 p-2 sm:p-3 rounded-lg shadow sticky bottom-0">
+        <div className="bg-base-100 p-1.5 sm:p-2 rounded-lg shadow sticky bottom-0">
           <div className="str-video__call-controls flex flex-wrap items-center justify-center gap-2">
             <Restricted requiredGrants={[OwnCapability.SEND_AUDIO]}>
               <ToggleAudioPublishingButton />

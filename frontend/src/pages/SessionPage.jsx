@@ -185,7 +185,7 @@ function SessionPage() {
   };
 
   return (
-    <div className="min-h-dvh bg-base-100 flex flex-col">
+    <div className="session-page bg-base-100 flex flex-col">
       <NavBar />
 
       <div className="flex-1 min-h-0 overflow-hidden">
