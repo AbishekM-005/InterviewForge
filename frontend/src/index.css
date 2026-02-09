@@ -2,6 +2,9 @@
 @plugin "daisyui" {
   themes: all;
 }
+html {
+  scroll-behavior: smooth;
+}
 /* Add cursor pointer by default */
 @layer base {
   button:not(:disabled),
