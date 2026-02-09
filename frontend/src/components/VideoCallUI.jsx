@@ -344,8 +344,8 @@ function VideoCallUI({ chatClient, channel }) {
   }
 
   return (
-    <div className="h-full min-h-0 flex flex-col lg:flex-row gap-2 sm:gap-3 relative str-video">
-      <div className="flex-1 min-h-0 flex flex-col gap-2 sm:gap-3">
+    <div className="video-call-ui h-full min-h-0 flex flex-col lg:flex-row gap-2 sm:gap-3 relative str-video">
+      <div className="video-call-main flex-1 min-h-0 flex flex-col gap-2 sm:gap-3">
         {/* Participants count badge and Chat Toggle */}
         <div className="flex flex-wrap items-center justify-between gap-2 bg-base-100 p-3 rounded-lg shadow">
           <div className="flex items-center gap-2 min-w-0">
@@ -370,7 +370,7 @@ function VideoCallUI({ chatClient, channel }) {
         </div>
 
         <div
-          className="flex-1 min-h-[320px] sm:min-h-[360px] lg:min-h-0 bg-base-300 rounded-lg overflow-hidden relative aspect-auto h-full video-carousel-layout"
+          className="video-stage flex-1 min-h-[320px] sm:min-h-[360px] lg:min-h-0 bg-base-300 rounded-lg overflow-hidden relative aspect-auto h-full video-carousel-layout"
           onTouchStart={handleTouchStart}
           onTouchEnd={handleTouchEnd}
         >

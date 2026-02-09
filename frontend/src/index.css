@@ -26,6 +26,23 @@
   }
 }
 
+/* Video call layout sizing */
+.video-call-ui {
+  height: 100%;
+  max-height: 100dvh;
+  overflow: hidden;
+}
+
+.video-call-main {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.video-stage {
+  min-height: 0;
+  overflow: hidden;
+}
+
 /* Stream Video layout fill fixes */
 .video-grid-fill .str-video__paginated-grid-layout,
 .video-grid-fill .str-video__paginated-grid-layout__inner,
@@ -55,6 +72,12 @@
   width: 100%;
 }
 
+.video-carousel-layout .str-video__participant-view__inner,
+.video-carousel-layout .str-video__participant-view .str-video__participant-view__inner {
+  height: 100%;
+  width: 100%;
+}
+
 .video-carousel-layout video,
 .video-carousel-layout .str-video__participant-view video {
   width: 100%;
@@ -63,19 +86,9 @@
   background: #0b0d10;
 }
 
-.video-carousel-layout {
-  padding-bottom: 64px;
-}
-
-@media (max-width: 640px) {
-  .video-carousel-layout {
-    padding-bottom: 72px;
-  }
-}
-
 .video-carousel-controls {
   position: absolute;
-  inset: auto 0 0 0;
+  inset: auto 0 0.5rem 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
