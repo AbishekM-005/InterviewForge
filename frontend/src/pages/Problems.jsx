@@ -54,7 +54,7 @@ const ProblemsPage = () => {
   ).length;
 
   return (
-    <div className="min-h-dvh bg-base-200">
+    <div className="problems-page bg-base-200">
       <NavBar />
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
         <div className="mb-8">
