@@ -1,11 +1,7 @@
-// Used for code execution
+// Used for code execution via backend proxy route
+import axiosInstance from "./axios";
 
-const PISTON_API = "https://emkc.org/api/v2/piston";
-const LANGUAGE_VERSIONS = {
-  javascript: { language: "javascript", version: "18.15.0" },
-  python: { language: "python", version: "3.10.0" },
-  java: { language: "java", version: "15.0.2" },
-};
+const SUPPORTED_LANGUAGES = new Set(["javascript", "python", "java"]);
 
 /**
  *
@@ -16,9 +12,7 @@ const LANGUAGE_VERSIONS = {
 
 export async function executeCode(language, code) {
   try {
-    const languageConfig = LANGUAGE_VERSIONS[language];
-
-    if (!languageConfig) {
+    if (!SUPPORTED_LANGUAGES.has(language)) {
       return {
         success: false,
         error: `Unsupported Language: ${language}`,
@@ -39,59 +33,31 @@ export async function executeCode(language, code) {
       };
     }
 
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 20000);
-
-    const response = await fetch(`${PISTON_API}/execute`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
+    const { data } = await axiosInstance.post(
+      "/code/execute",
+      {
+        language,
+        code,
       },
-      signal: controller.signal,
-      body: JSON.stringify({
-        language: languageConfig.language,
-        version: languageConfig.version,
-        files: [
-          {
-            name: `main.${getFileExtension(language)}`,
-            content: code,
-          },
-        ],
-      }),
-    });
-    clearTimeout(timeoutId);
+      {
+        timeout: 25000,
+      }
+    );
 
-    if (!response.ok) {
-      return {
-        success: false,
-        error: `HTTP error! status : ${response.status}`,
-      };
-    }
-
-    const data = await response.json();
-
-    const output = data.run.output || "";
-    const stderr = data.run.stderr || "";
-
-    if (stderr) {
-      return { success: false, error: stderr };
-    }
-
-    return { success: true, output: output || "No Output" };
+    return data;
   } catch (error) {
+    const status = error?.response?.status;
+    const message =
+      error?.response?.data?.error ||
+      error?.response?.data?.msg ||
+      error?.message ||
+      "Unknown error";
+
     return {
       success: false,
-      error: `Failed to execute code: ${error.message}`,
+      error: status
+        ? `HTTP error! status : ${status} - ${message}`
+        : `Failed to execute code: ${message}`,
     };
   }
-}
-
-function getFileExtension(language) {
-  const extensions = {
-    javascript: "js",
-    python: "py",
-    java: "java",
-  };
-
-  return extensions[language] || "txt";
 }
