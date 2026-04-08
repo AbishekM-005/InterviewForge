@@ -96,6 +96,7 @@ function SessionPage() {
     id,
     joinSessionMutation,
     refetch,
+    navigate,
   ]);
 
   useEffect(() => {
@@ -108,7 +109,7 @@ function SessionPage() {
       }
       navigate("/dashboard");
     }
-  }, [session, loadingSession, navigate]);
+  }, [session, loadingSession, navigate, isHost]);
 
   useEffect(() => {
     if (problemData?.starterCode?.[selectedLanguage]) {

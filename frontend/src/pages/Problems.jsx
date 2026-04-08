@@ -15,18 +15,18 @@ const ProblemsPage = () => {
 
   const allProblems = useMemo(() => Object.values(PROBLEMS), []);
   const { data: activeSessionsData } = useActiveSessions();
-  const activeSessions = activeSessionsData?.sessions || [];
   const [solvedProblemIds, setSolvedProblemIds] = useState([]);
 
   const activeSessionCountByTitle = useMemo(() => {
-    return activeSessions.reduce((accumulator, session) => {
+    const sessions = activeSessionsData?.sessions || [];
+    return sessions.reduce((accumulator, session) => {
       const title = session?.problem;
       if (!title) return accumulator;
 
       accumulator[title] = (accumulator[title] || 0) + 1;
       return accumulator;
     }, {});
-  }, [activeSessions]);
+  }, [activeSessionsData?.sessions]);
 
   const filteredProblems = useMemo(() => {
     const query = searchQuery.trim().toLowerCase();
