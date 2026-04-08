@@ -14,7 +14,7 @@
 import { OwnCapability } from "@stream-io/video-client";
 import { Restricted } from "@stream-io/video-react-bindings";
 import { Loader2Icon, MessageSquareIcon, UsersIcon, XIcon } from "lucide-react";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router";
 import {
   Channel,
@@ -49,20 +49,25 @@ const extractCopyableMessageText = (text = "") => {
 const copyTextToClipboard = async (text) => {
   if (!text) return;
 
-  if (navigator?.clipboard?.writeText) {
+  try {
     await navigator.clipboard.writeText(text);
     return;
-  }
+  } catch (clipboardError) {
+    const textarea = document.createElement("textarea");
+    textarea.value = text;
+    textarea.style.position = "fixed";
+    textarea.style.left = "-9999px";
+    document.body.appendChild(textarea);
+    textarea.focus();
+    textarea.select();
 
-  const textarea = document.createElement("textarea");
-  textarea.value = text;
-  textarea.style.position = "fixed";
-  textarea.style.left = "-9999px";
-  document.body.appendChild(textarea);
-  textarea.focus();
-  textarea.select();
-  document.execCommand("copy");
-  document.body.removeChild(textarea);
+    const success = document.execCommand?.("copy");
+    document.body.removeChild(textarea);
+
+    if (!success) {
+      throw clipboardError;
+    }
+  }
 };
 
 function VideoCallUI({ chatClient, channel }) {
@@ -180,7 +185,7 @@ function VideoCallUI({ chatClient, channel }) {
     if (orderedParticipants.length === 0) return;
     const remoteIndex = orderedParticipants.findIndex((p) => !p.isLocalParticipant);
     setActiveIndex(remoteIndex >= 0 ? remoteIndex : 0);
-  }, [orderedParticipants.length]);
+  }, [orderedParticipants]);
 
   const goPrev = () => {
     setActiveIndex((prev) =>
@@ -218,8 +223,7 @@ function VideoCallUI({ chatClient, channel }) {
         stopRecording("call ended");
       }
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isRecording]);
+  }, [isRecording, stopRecording]);
 
   const getSupportedRecordingMimeType = () => {
     if (typeof MediaRecorder === "undefined") return "";
@@ -247,7 +251,7 @@ function VideoCallUI({ chatClient, channel }) {
     URL.revokeObjectURL(url);
   };
 
-  const stopRecording = (reason) => {
+  const stopRecording = useCallback((reason) => {
     if (!mediaRecorderRef.current) return;
 
     try {
@@ -268,7 +272,8 @@ function VideoCallUI({ chatClient, channel }) {
     if (reason) {
       toast.success(`Recording saved (${reason})`);
     }
-  };
+  }, []);
+
 
   const startRecording = async () => {
     setRecordingError("");
