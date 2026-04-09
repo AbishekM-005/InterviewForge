@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router";
 import { PROBLEMS } from "../data/problems.js";
 import NavBar from "../components/NavBar";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
-import ProblemDescription from "../components/problemDescription.jsx";
+import ProblemDescription from "../components/ProblemDescription.jsx";
 import CodeEditorPanel from "../components/CodeEditorPanel.jsx";
 import OutputPanel from "../components/OutputPanel.jsx";
 import { executeCode } from "../lib/piston.js";
