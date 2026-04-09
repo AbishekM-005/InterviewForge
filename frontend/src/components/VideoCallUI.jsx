@@ -73,9 +73,8 @@ const copyTextToClipboard = async (text) => {
 function VideoCallUI({ chatClient, channel }) {
   const navigate = useNavigate();
 
-  try {
-    const { useCallCallingState, useParticipantCount, useParticipants, useRemoteParticipants } =
-      useCallStateHooks();
+  const { useCallCallingState, useParticipantCount, useParticipants, useRemoteParticipants } =
+    useCallStateHooks();
     const callingState = useCallCallingState();
     const participantCount = useParticipantCount();
     const participants = useParticipants();
@@ -420,28 +419,6 @@ function VideoCallUI({ chatClient, channel }) {
         )}
       </div>
     );
-  } catch (error) {
-    console.error("VideoCallUI render error:", error);
-    return (
-      <div className="h-full flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-24 h-24 bg-error/10 rounded-full flex items-center justify-center mb-4 mx-auto">
-            <PhoneOffIcon className="w-12 h-12 text-error" />
-          </div>
-          <h2 className="text-xl font-bold mb-2">Video Call Error</h2>
-          <p className="text-base-content/70 mb-4">
-            Something went wrong with the video call. Please refresh the page.
-          </p>
-          <button
-            onClick={() => window.location.reload()}
-            className="btn btn-primary"
-          >
-            Refresh Page
-          </button>
-        </div>
-      </div>
-    );
-  }
 }
 
 export default VideoCallUI;
