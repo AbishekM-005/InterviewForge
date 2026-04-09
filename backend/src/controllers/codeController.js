@@ -1,4 +1,5 @@
 import ENV from "../lib/env.js";
+import { runCodeInDocker } from "../lib/dockerRunner.js";
 
 const LANGUAGE_CONFIGS = {
   javascript: { language: "javascript", version: "18.15.0", extension: "js" },
@@ -35,6 +36,43 @@ export async function executeCode(req, res) {
         success: false,
         error: `Code is too large. Max size is ${MAX_CODE_SIZE} characters`,
       });
+    }
+
+    const useDocker = ENV.CODE_EXECUTION_RUNNER === "docker" || !ENV.PISTON_API_URL;
+
+    if (useDocker) {
+      try {
+        const result = await runCodeInDocker(languageConfig.language, code, EXECUTION_TIMEOUT_MS);
+
+        if (!result.success) {
+          return res.status(200).json({
+            success: false,
+            output: result.output,
+            error: result.error || "Execution failed in Docker",
+            exitCode: result.exitCode,
+          });
+        }
+
+        return res.status(200).json({
+          success: true,
+          output: result.output || "No Output",
+        });
+      } catch (error) {
+        if (error?.message === "Execution timed out") {
+          return res.status(504).json({
+            success: false,
+            error: `Execution timed out after ${EXECUTION_TIMEOUT_MS}ms`,
+          });
+        }
+
+        console.error("Error in Docker code execution: ", error);
+        const causeMessage =
+          error?.cause?.code || error?.cause?.message || error?.message || "Unknown error";
+        return res.status(502).json({
+          success: false,
+          error: `Failed to execute code in Docker: ${causeMessage}`,
+        });
+      }
     }
 
     const controller = new AbortController();

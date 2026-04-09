@@ -10,7 +10,9 @@ if (!apiKey || !apiSecret) {
 }
 
 export const chatClient = StreamChat.getInstance(apiKey, apiSecret); //for chat features
-export const streamClient = new StreamClient(apiKey, apiSecret); //for video calls
+export const streamClient = new StreamClient(apiKey, apiSecret, {
+  timeout: 10000, // Increase timeout to 10 seconds
+}); //for video calls
 
 export const upsertStreamUser = async (userData) => {
   try {
