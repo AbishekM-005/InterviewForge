@@ -1,6 +1,12 @@
 import dotenv from "dotenv";
+import path from "path";
+import { fileURLToPath } from "url";
 
-dotenv.config({ quiet: true });
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const envPath = path.resolve(__dirname, "../../.env");
+
+dotenv.config({ path: envPath, quiet: true });
 
 const ENV = {
   PORT: process.env.PORT || "5001",
@@ -12,6 +18,7 @@ const ENV = {
   PISTON_AUTH_TOKEN: process.env.PISTON_AUTH_TOKEN,
   CODE_EXECUTION_TIMEOUT_MS: process.env.CODE_EXECUTION_TIMEOUT_MS || "20000",
   CODE_EXECUTION_MAX_CODE_SIZE: process.env.CODE_EXECUTION_MAX_CODE_SIZE || "20000",
+  CODE_EXECUTION_RUNNER: process.env.CODE_EXECUTION_RUNNER || "docker",
   CODE_EXECUTION_RATE_LIMIT_MAX: process.env.CODE_EXECUTION_RATE_LIMIT_MAX || "30",
   CODE_EXECUTION_RATE_LIMIT_WINDOW_MS:
     process.env.CODE_EXECUTION_RATE_LIMIT_WINDOW_MS || "60000",

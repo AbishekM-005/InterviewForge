@@ -69,9 +69,17 @@ npm run dev --prefix backend
 npm run dev --prefix frontend
 ```
 
-### 4) Run Piston locally (required for code execution)
+### 4) Run code with Docker (recommended)
 
-Run your own Piston service (Docker example):
+The backend can execute supported code directly using Docker. This requires Docker to be installed and available to the backend process.
+
+If you want to use the built-in Docker runner, set:
+
+```bash
+CODE_EXECUTION_RUNNER=docker
+```
+
+If you prefer the existing Piston flow, keep `CODE_EXECUTION_RUNNER=piston` and run Piston locally:
 
 ```bash
 docker run --privileged -dit -v piston-data:/piston -p 2000:2000 --name piston_api ghcr.io/engineer-man/piston
