@@ -8,16 +8,16 @@ function WelcomeSection({ onCreateSession }) {
     <div className="relative overflow-hidden">
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 py-10 sm:py-16">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
-          <div>
-            <div className="flex items-center gap-3 mb-4">
+          <div className="min-w-0">
+            <div className="flex items-start gap-3 mb-4">
               <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center">
                 <SparklesIcon className="w-6 h-6 text-white" />
               </div>
-              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">
+              <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent break-words">
                 Welcome back, {user?.firstName || "there"}!
               </h1>
             </div>
-            <p className="text-base sm:text-lg text-base-content/60 ml-0 sm:ml-16">
+            <p className="text-sm sm:text-lg text-base-content/60 ml-0 sm:ml-16">
               Ready to level up your coding skills?
             </p>
           </div>

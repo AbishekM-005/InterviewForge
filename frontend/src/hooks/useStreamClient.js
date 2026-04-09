@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { StreamChat } from "stream-chat";
-import { OwnCapability } from "@stream-io/video-client";
 import toast from "react-hot-toast";
 import { initializeStreamClient, disconnectStreamClient } from "../lib/stream";
 import { sessionApi } from "../api/sessions";
@@ -11,6 +10,9 @@ function useStreamClient(session, loadingSession, isHost, isParticipant) {
   const [chatClient, setChatClient] = useState(null);
   const [channel, setChannel] = useState(null);
   const [isInitializingCall, setIsInitializingCall] = useState(true);
+  const sessionId = session?._id;
+  const callId = session?.callId;
+  const sessionStatus = session?.status;
 
   useEffect(() => {
     let isCancelled = false;
@@ -23,7 +25,7 @@ function useStreamClient(session, loadingSession, isHost, isParticipant) {
       setChannel(null);
       setChatClient(null);
 
-      if (!session?._id || !session?.callId) {
+      if (!sessionId || !callId) {
         setIsInitializingCall(false);
         return;
       }
@@ -33,14 +35,14 @@ function useStreamClient(session, loadingSession, isHost, isParticipant) {
         return;
       }
 
-      if (session.status === "completed") {
+      if (sessionStatus === "completed") {
         setIsInitializingCall(false);
         return;
       }
 
       try {
         const { token, userId, userName, userImage } =
-          await sessionApi.getStreamToken(session._id);
+          await sessionApi.getStreamToken(sessionId);
 
         const client = await initializeStreamClient(
           {
@@ -54,28 +56,38 @@ function useStreamClient(session, loadingSession, isHost, isParticipant) {
         if (isCancelled) return;
         setStreamClient(client);
 
-        videoCall = client.call("default", session.callId);
+        videoCall = client.call("default", callId);
         await videoCall.join({ create: true });
         if (isCancelled) return;
         setCall(videoCall);
 
         const apiKey = import.meta.env.VITE_STREAM_API_KEY;
+        if (!apiKey) {
+          throw new Error("Stream API key is not provided.");
+        }
+
         chatClientInstance = StreamChat.getInstance(apiKey);
 
-        await chatClientInstance.connectUser(
+        if (chatClientInstance.userID && chatClientInstance.userID !== userId) {
+          await chatClientInstance.disconnectUser();
+        }
+
+        if (!chatClientInstance.userID) {
+          await chatClientInstance.connectUser(
           {
             id: userId,
             name: userName,
-            image: userImage,
-          },
-          token
-        );
+              image: userImage,
+            },
+            token
+          );
+        }
         if (isCancelled) return;
         setChatClient(chatClientInstance);
 
         const chatChannel = chatClientInstance.channel(
           "messaging",
-          session.callId
+          callId
         );
         await chatChannel.watch();
         if (isCancelled) return;
@@ -90,7 +102,7 @@ function useStreamClient(session, loadingSession, isHost, isParticipant) {
       }
     };
 
-    if (session && !loadingSession) initCall();
+    if (sessionId && !loadingSession) initCall();
     else setIsInitializingCall(loadingSession);
 
     // cleanup - performance reasons
@@ -107,7 +119,7 @@ function useStreamClient(session, loadingSession, isHost, isParticipant) {
         }
       })();
     };
-  }, [session, loadingSession, isHost, isParticipant]);
+  }, [sessionId, callId, sessionStatus, loadingSession, isHost, isParticipant]);
 
   return {
     streamClient,

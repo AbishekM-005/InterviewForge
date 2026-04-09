@@ -1,6 +1,5 @@
 import express from "express";
 import cors from "cors";
-import path from "path";
 import { serve } from "inngest/express";
 import ENV from "./lib/env.js";
 import connectDB from "./lib/db.js";
@@ -11,8 +10,6 @@ import sessionRoutes from "./routes/sessionRoutes.js";
 import codeRoutes from "./routes/codeRoutes.js";
 
 const app = express();
-
-const __dirname = path.resolve();
 
 const baseOrigins = (ENV.CLIENT_URL || "")
   .split(",")
@@ -29,6 +26,7 @@ const devOrigins = [
 const allowedOrigins =
   ENV.NODE_ENV === "production" ? baseOrigins : [...baseOrigins, ...devOrigins];
 
+app.set("trust proxy", ENV.NODE_ENV === "production" ? 1 : false);
 app.disable("x-powered-by");
 app.use(express.json({ limit: "100kb" }));
 app.use(

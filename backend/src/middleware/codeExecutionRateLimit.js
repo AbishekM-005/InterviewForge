@@ -8,13 +8,15 @@ const requestBuckets = new Map();
 const MAX_BUCKETS = 10000;
 
 const getClientKey = (req) => {
-  const forwardedFor = req.headers["x-forwarded-for"];
-
-  if (typeof forwardedFor === "string" && forwardedFor.length > 0) {
-    return forwardedFor.split(",")[0].trim();
+  if (req.user?.clerkId) {
+    return `user:${req.user.clerkId}`;
   }
 
-  return req.ip || "unknown";
+  if (req.user?._id) {
+    return `user:${req.user._id.toString()}`;
+  }
+
+  return `ip:${req.ip || "unknown"}`;
 };
 
 export function codeExecutionRateLimit(req, res, next) {

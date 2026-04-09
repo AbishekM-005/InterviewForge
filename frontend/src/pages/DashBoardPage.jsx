@@ -75,10 +75,10 @@ const DashBoardPage = () => {
         }}
       />
       <div className="container mx-auto px-4 sm:px-6 pb-16">
-        <div className="mb-4 flex justify-end">
+        <div className="mb-4 flex justify-stretch sm:justify-end">
           <button
             type="button"
-            className="btn btn-outline btn-sm gap-2"
+            className="btn btn-outline btn-sm gap-2 w-full sm:w-auto"
             onClick={() => {
               refetchActiveSessions();
               refetchRecentSessions();

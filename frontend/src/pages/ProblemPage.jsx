@@ -147,10 +147,13 @@ const Problem = () => {
   return (
     <div className="min-h-dvh bg-base-100 flex flex-col">
       <NavBar />
-      <div className="flex-1 min-h-0">
-        <PanelGroup direction={isMobile ? "vertical" : "horizontal"}>
+      <div className="flex-1 min-h-0 overflow-hidden">
+        <PanelGroup
+          direction={isMobile ? "vertical" : "horizontal"}
+          className="h-full min-h-0"
+        >
           {/* Left panel - problem description */}
-          <Panel defaultSize={isMobile ? 45 : 40} minSize={30}>
+          <Panel defaultSize={isMobile ? 42 : 40} minSize={isMobile ? 25 : 30}>
             <ProblemDescription
               problem={currentProblem}
               currentProblemId={currentProblemId}
@@ -161,14 +164,20 @@ const Problem = () => {
 
           <PanelResizeHandle
             className={`${
-              isMobile ? "h-2 cursor-row-resize" : "w-2 cursor-col-resize"
+              isMobile
+                ? "h-4 cursor-row-resize flex items-center justify-center bg-base-300 hover:bg-primary/70"
+                : "w-2 cursor-col-resize bg-base-300 hover:bg-primary"
             } bg-base-300 hover:bg-primary transition-colors`}
-          />
+          >
+            {isMobile ? (
+              <span className="h-1.5 w-12 rounded-full bg-base-content/30" />
+            ) : null}
+          </PanelResizeHandle>
           {/* right panel - code editor & output */}
-          <Panel defaultSize={isMobile ? 55 : 60} minSize={30}>
-            <PanelGroup direction="vertical">
+          <Panel defaultSize={isMobile ? 58 : 60} minSize={isMobile ? 25 : 30}>
+            <PanelGroup direction="vertical" className="h-full min-h-0">
               {/* Top panel - Code Editor Panel*/}
-              <Panel defaultSize={70} minSize={30}>
+              <Panel defaultSize={70} minSize={25}>
                 <CodeEditorPanel
                   selectedLanguage={selectedLanguage}
                   code={code}
@@ -183,7 +192,7 @@ const Problem = () => {
               <PanelResizeHandle className="h-2 bg-base-300 hover:bg-primary transition-colors cursor-row-resize" />
               {/* Bottom panel - Output Panel*/}
 
-              <Panel defaultSize={30} minSize={30}>
+              <Panel defaultSize={30} minSize={20}>
                 <OutputPanel output={output} />
               </Panel>
             </PanelGroup>

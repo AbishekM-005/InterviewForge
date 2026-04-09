@@ -62,18 +62,18 @@ const ProblemDescription = ({
                     Example {idx + 1}
                   </p>
                 </div>
-                <div className="bg-base-200 rounded-lg p-4 font-mono text-xs sm:text-sm space-y-1.5">
-                  <div className="flex gap-2">
+                <div className="bg-base-200 rounded-lg p-4 font-mono text-xs sm:text-sm space-y-1.5 overflow-x-auto">
+                  <div className="flex gap-2 min-w-0">
                     <span className="text-primary font-bold min-w-[56px] sm:min-w-[70px]">
                       Input:
                     </span>
-                    <span>{example.input}</span>
+                    <span className="break-words whitespace-pre-wrap">{example.input}</span>
                   </div>
-                  <div className="flex gap-2">
+                  <div className="flex gap-2 min-w-0">
                     <span className="text-secondary font-bold min-w-[56px] sm:min-w-[70px]">
                       Output:
                     </span>
-                    <span>{example.output}</span>
+                    <span className="break-words whitespace-pre-wrap">{example.output}</span>
                   </div>
                   {example.explanation && (
                     <div className="pt-2 border-t border-base-300 mt-2">
@@ -97,7 +97,7 @@ const ProblemDescription = ({
             {problem.constraints.map((constraint, idx) => (
               <li key={idx} className="flex gap-2">
                 <span className="text-primary">.</span>
-                <code className="text-sm">{constraint}</code>
+                <code className="text-sm break-words whitespace-pre-wrap">{constraint}</code>
               </li>
             ))}
           </ul>

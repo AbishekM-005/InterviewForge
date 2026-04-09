@@ -50,8 +50,8 @@ const HomePage = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
         <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
           {/* LEFT CONTENT */}
-          <div className="space-y-8">
-            <div className="badge badge-primary badge-lg">
+          <div className="space-y-8 order-2 lg:order-1">
+            <div className="badge badge-primary badge-lg max-w-full">
               <ZapIcon className="size-4" />
               Real-time Collaboration
             </div>
@@ -122,7 +122,7 @@ const HomePage = () => {
           <img
             src="/hero.png"
             alt="CodeCollab Platform"
-            className="w-full h-auto rounded-3xl shadow-2xl border-4 border-base-100/90 hover:scale-[1.02] transition-transform duration-500"
+            className="order-1 lg:order-2 w-full max-w-2xl mx-auto h-auto rounded-3xl shadow-2xl border-4 border-base-100/90 hover:scale-[1.02] transition-transform duration-500"
           />
         </div>
 
@@ -131,7 +131,7 @@ const HomePage = () => {
           id="features"
           className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20"
         >
-          <div className="text-center mb-16">
+          <div className="text-center mb-12 sm:mb-16">
             <h2 className="text-3xl sm:text-4xl font-bold mb-4">
               Everything you need to{" "}
               <span className="text-primary font-mono">Succeed</span>
