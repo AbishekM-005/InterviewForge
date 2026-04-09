@@ -41,17 +41,17 @@ const OutputPanel = ({ output }) => {
             Click "Run Code" to see the output here...
           </p>
         ) : output.success ? (
-          <pre className="text-xs sm:text-sm font-mono text-success whitespace-pre-wrap">
+          <pre className="text-xs sm:text-sm font-mono text-success whitespace-pre-wrap break-words">
             {output.output}
           </pre>
         ) : (
           <div>
             {output.output && (
-              <pre className="text-xs sm:text-sm font-mono text-base-content whitespace-pre-wrap mb-2">
+              <pre className="text-xs sm:text-sm font-mono text-base-content whitespace-pre-wrap break-words mb-2">
                 {output.output}
               </pre>
             )}
-            <pre className="text-xs sm:text-sm font-mono text-error whitespace-pre-wrap">
+            <pre className="text-xs sm:text-sm font-mono text-error whitespace-pre-wrap break-words">
               {output.error}
             </pre>
           </div>

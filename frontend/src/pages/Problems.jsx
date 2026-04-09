@@ -67,7 +67,7 @@ const ProblemsPage = () => {
   return (
     <div className="problems-page bg-base-200">
       <NavBar />
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-12">
         <div className="mb-8">
           <h1 className="text-2xl sm:text-4xl font-bold mb-2">Practice Problems</h1>
           <p className="text-sm sm:text-base text-base-content/70">
@@ -122,8 +122,8 @@ const ProblemsPage = () => {
                             <Code2Icon className="size-5 sm:size-6 text-primary" />
                           </div>
                           <div className="flex-1">
-                            <div className="flex flex-wrap items-center gap-2 mb-1">
-                              <h2 className="text-lg sm:text-xl font-bold">{problem.title}</h2>
+                    <div className="flex flex-wrap items-center gap-2 mb-1">
+                      <h2 className="text-lg sm:text-xl font-bold break-words">{problem.title}</h2>
                               <span
                                 className={`badge ${getDifficultyBadgeClass(problem.difficulty)}`}
                               >
@@ -150,7 +150,7 @@ const ProblemsPage = () => {
                         </p>
                       </div>
 
-                      <div className="flex items-center gap-2 text-primary">
+                      <div className="flex items-center justify-end gap-2 text-primary sm:self-center">
                         <span className="font-medium">Solve</span>
                         <ChevronRightIcon className="size-5" />
                       </div>

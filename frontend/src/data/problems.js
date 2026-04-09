@@ -43,13 +43,13 @@
   console.log(twoSum([3, 2, 4], 6)); // Expected: [1, 2]
   console.log(twoSum([3, 3], 6)); // Expected: [0, 1]`,
       python: `def twoSum(nums, target):
-      # Write your solution here
-      pass
-  
-  # Test cases
-  print(twoSum([2, 7, 11, 15], 9))  # Expected: [0, 1]
-  print(twoSum([3, 2, 4], 6))  # Expected: [1, 2]
-  print(twoSum([3, 3], 6))  # Expected: [0, 1]`,
+    # Write your solution here
+    pass
+
+# Test cases
+print(twoSum([2, 7, 11, 15], 9))  # Expected: [0, 1]
+print(twoSum([3, 2, 4], 6))  # Expected: [1, 2]
+print(twoSum([3, 3], 6))  # Expected: [0, 1]`,
       java: `import java.util.*;
   
   class Solution {
@@ -110,17 +110,17 @@
   reverseString(test2);
   console.log(test2); // Expected: ["h","a","n","n","a","H"]`,
       python: `def reverseString(s):
-      # Write your solution here
-      pass
-  
-  # Test cases
-  test1 = ["h","e","l","l","o"]
-  reverseString(test1)
-  print(test1)  # Expected: ["o","l","l","e","h"]
-  
-  test2 = ["H","a","n","n","a","h"]
-  reverseString(test2)
-  print(test2)  # Expected: ["h","a","n","n","a","H"]`,
+    # Write your solution here
+    pass
+
+# Test cases
+test1 = ["h","e","l","l","o"]
+reverseString(test1)
+print(test1)  # Expected: ["o","l","l","e","h"]
+
+test2 = ["H","a","n","n","a","h"]
+reverseString(test2)
+print(test2)  # Expected: ["h","a","n","n","a","H"]`,
       java: `import java.util.*;
   
   class Solution {
@@ -191,13 +191,13 @@
   console.log(isPalindrome("race a car")); // Expected: false
   console.log(isPalindrome(" ")); // Expected: true`,
       python: `def isPalindrome(s):
-      # Write your solution here
-      pass
-  
-  # Test cases
-  print(isPalindrome("A man, a plan, a canal: Panama"))  # Expected: True
-  print(isPalindrome("race a car"))  # Expected: False
-  print(isPalindrome(" "))  # Expected: True`,
+    # Write your solution here
+    pass
+
+# Test cases
+print(isPalindrome("A man, a plan, a canal: Panama"))  # Expected: True
+print(isPalindrome("race a car"))  # Expected: False
+print(isPalindrome(" "))  # Expected: True`,
       java: `class Solution {
       public static boolean isPalindrome(String s) {
           // Write your solution here
@@ -257,13 +257,13 @@
   console.log(maxSubArray([1])); // Expected: 1
   console.log(maxSubArray([5,4,-1,7,8])); // Expected: 23`,
       python: `def maxSubArray(nums):
-      # Write your solution here
-      pass
-  
-  # Test cases
-  print(maxSubArray([-2,1,-3,4,-1,2,1,-5,4]))  # Expected: 6
-  print(maxSubArray([1]))  # Expected: 1
-  print(maxSubArray([5,4,-1,7,8]))  # Expected: 23`,
+    # Write your solution here
+    pass
+
+# Test cases
+print(maxSubArray([-2,1,-3,4,-1,2,1,-5,4]))  # Expected: 6
+print(maxSubArray([1]))  # Expected: 1
+print(maxSubArray([5,4,-1,7,8]))  # Expected: 23`,
       java: `class Solution {
       public static int maxSubArray(int[] nums) {
           // Write your solution here
@@ -321,12 +321,12 @@
   console.log(maxArea([1,8,6,2,5,4,8,3,7])); // Expected: 49
   console.log(maxArea([1,1])); // Expected: 1`,
       python: `def maxArea(height):
-      # Write your solution here
-      pass
-  
-  # Test cases
-  print(maxArea([1,8,6,2,5,4,8,3,7]))  # Expected: 49
-  print(maxArea([1,1]))  # Expected: 1`,
+    # Write your solution here
+    pass
+
+# Test cases
+print(maxArea([1,8,6,2,5,4,8,3,7]))  # Expected: 49
+print(maxArea([1,1]))  # Expected: 1`,
       java: `class Solution {
       public static int maxArea(int[] height) {
           // Write your solution here
@@ -373,7 +373,38 @@
     starterCode: {
       javascript: `function merge(nums1, m, nums2, n) {
   // Write your solution here
+}
+
+// Test case
+let nums1 = [1,2,3,0,0,0];
+merge(nums1, 3, [2,5,6], 3);
+console.log(nums1); // Expected: [1,2,2,3,5,6]`,
+      python: `def merge(nums1, m, nums2, n):
+    # Write your solution here
+    pass
+
+# Test case
+nums1 = [1,2,3,0,0,0]
+merge(nums1, 3, [2,5,6], 3)
+print(nums1)  # Expected: [1, 2, 2, 3, 5, 6]`,
+      java: `import java.util.*;
+
+class Solution {
+    public static void merge(int[] nums1, int m, int[] nums2, int n) {
+        // Write your solution here
+    }
+
+    public static void main(String[] args) {
+        int[] nums1 = {1, 2, 3, 0, 0, 0};
+        merge(nums1, 3, new int[]{2, 5, 6}, 3);
+        System.out.println(Arrays.toString(nums1)); // Expected: [1, 2, 2, 3, 5, 6]
+    }
 }`,
+    },
+    expectedOutput: {
+      javascript: "[1,2,2,3,5,6]",
+      python: "[1, 2, 2, 3, 5, 6]",
+      java: "[1, 2, 2, 3, 5, 6]",
     },
   },
   "best-time-to-buy-and-sell-stock": {
@@ -397,7 +428,31 @@
     starterCode: {
       javascript: `function maxProfit(prices) {
   // Write your solution here
+}
+
+// Test case
+console.log(maxProfit([7,1,5,3,6,4])); // Expected: 5`,
+      python: `def maxProfit(prices):
+    # Write your solution here
+    pass
+
+# Test case
+print(maxProfit([7,1,5,3,6,4]))  # Expected: 5`,
+      java: `class Solution {
+    public static int maxProfit(int[] prices) {
+        // Write your solution here
+        return 0;
+    }
+
+    public static void main(String[] args) {
+        System.out.println(maxProfit(new int[]{7, 1, 5, 3, 6, 4})); // Expected: 5
+    }
 }`,
+    },
+    expectedOutput: {
+      javascript: "5",
+      python: "5",
+      java: "5",
     },
   },
   "contains-duplicate": {
@@ -423,7 +478,34 @@
     starterCode: {
       javascript: `function containsDuplicate(nums) {
   // Write your solution here
+}
+
+// Test cases
+console.log(containsDuplicate([1,2,3,1])); // Expected: true
+console.log(containsDuplicate([1,2,3,4])); // Expected: false`,
+      python: `def containsDuplicate(nums):
+    # Write your solution here
+    pass
+
+# Test cases
+print(containsDuplicate([1,2,3,1]))  # Expected: True
+print(containsDuplicate([1,2,3,4]))  # Expected: False`,
+      java: `class Solution {
+    public static boolean containsDuplicate(int[] nums) {
+        // Write your solution here
+        return false;
+    }
+
+    public static void main(String[] args) {
+        System.out.println(containsDuplicate(new int[]{1, 2, 3, 1})); // Expected: true
+        System.out.println(containsDuplicate(new int[]{1, 2, 3, 4})); // Expected: false
+    }
 }`,
+    },
+    expectedOutput: {
+      javascript: "true\nfalse",
+      python: "True\nFalse",
+      java: "true\nfalse",
     },
   },
 
@@ -449,7 +531,33 @@
     starterCode: {
       javascript: `function productExceptSelf(nums) {
   // Write your solution here
+}
+
+// Test case
+console.log(productExceptSelf([1,2,3,4])); // Expected: [24,12,8,6]`,
+      python: `def productExceptSelf(nums):
+    # Write your solution here
+    pass
+
+# Test case
+print(productExceptSelf([1,2,3,4]))  # Expected: [24, 12, 8, 6]`,
+      java: `import java.util.*;
+
+class Solution {
+    public static int[] productExceptSelf(int[] nums) {
+        // Write your solution here
+        return new int[0];
+    }
+
+    public static void main(String[] args) {
+        System.out.println(Arrays.toString(productExceptSelf(new int[]{1, 2, 3, 4}))); // Expected: [24, 12, 8, 6]
+    }
 }`,
+    },
+    expectedOutput: {
+      javascript: "[24,12,8,6]",
+      python: "[24, 12, 8, 6]",
+      java: "[24, 12, 8, 6]",
     },
   },
   "move-zeroes": {
@@ -471,7 +579,38 @@
     starterCode: {
       javascript: `function moveZeroes(nums) {
   // Write your solution here
+}
+
+// Test case
+let nums = [0,1,0,3,12];
+moveZeroes(nums);
+console.log(nums); // Expected: [1,3,12,0,0]`,
+      python: `def moveZeroes(nums):
+    # Write your solution here
+    pass
+
+# Test case
+nums = [0,1,0,3,12]
+moveZeroes(nums)
+print(nums)  # Expected: [1, 3, 12, 0, 0]`,
+      java: `import java.util.*;
+
+class Solution {
+    public static void moveZeroes(int[] nums) {
+        // Write your solution here
+    }
+
+    public static void main(String[] args) {
+        int[] nums = {0, 1, 0, 3, 12};
+        moveZeroes(nums);
+        System.out.println(Arrays.toString(nums)); // Expected: [1, 3, 12, 0, 0]
+    }
 }`,
+    },
+    expectedOutput: {
+      javascript: "[1,3,12,0,0]",
+      python: "[1, 3, 12, 0, 0]",
+      java: "[1, 3, 12, 0, 0]",
     },
   },
 };

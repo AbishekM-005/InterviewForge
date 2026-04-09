@@ -58,6 +58,14 @@ export async function executeCode(req, res) {
           output: result.output || "No Output",
         });
       } catch (error) {
+        if (error?.code === "DOCKER_IMAGE_PREP_TIMEOUT") {
+          return res.status(503).json({
+            success: false,
+            error:
+              "Preparing the selected runtime is taking longer than expected. Please retry in a moment.",
+          });
+        }
+
         if (error?.message === "Execution timed out") {
           return res.status(504).json({
             success: false,

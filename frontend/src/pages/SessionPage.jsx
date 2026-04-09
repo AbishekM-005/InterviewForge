@@ -132,17 +132,6 @@ function SessionPage() {
     return () => media.removeListener(handleChange);
   }, []);
 
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    const updateVh = () => {
-      const vh = window.innerHeight * 0.01;
-      document.documentElement.style.setProperty("--app-vh", `${vh}px`);
-    };
-    updateVh();
-    window.addEventListener("resize", updateVh);
-    return () => window.removeEventListener("resize", updateVh);
-  }, []);
-
   const handleLanguageChange = (event) => {
     const newLanguage = event.target.value;
     setSelectedLanguage(newLanguage);
@@ -191,43 +180,43 @@ function SessionPage() {
 
       <div className="flex-1 min-h-0 overflow-hidden">
         {isMobile ? (
-          <div className="h-[calc(var(--app-vh,1vh)*100-72px)] min-h-0">
+          <div className="h-full min-h-0 overflow-hidden">
             <PanelGroup direction="vertical" className="h-full min-h-0">
               <Panel defaultSize={40} minSize={25} className="h-full min-h-0">
-              <div className="h-full min-h-0 p-2 sm:p-4">
-                <div className="bg-base-200 p-2 sm:p-4 rounded-xl h-full min-h-0">
-                  {isInitializingCall ? (
-                    <div className="h-full min-h-[280px] flex items-center justify-center">
-                      <div className="text-center">
-                        <Loader2Icon className="w-12 h-12 mx-auto animate-spin text-primary mb-4" />
-                        <p className="text-lg">Connecting to video call...</p>
-                      </div>
-                    </div>
-                  ) : !streamClient || !call ? (
-                    <div className="h-full min-h-[280px] flex items-center justify-center">
-                      <div className="card bg-base-100 shadow-xl max-w-md">
-                        <div className="card-body items-center text-center">
-                          <div className="w-24 h-24 bg-error/10 rounded-full flex items-center justify-center mb-4">
-                            <PhoneOffIcon className="w-12 h-12 text-error" />
-                          </div>
-                          <h2 className="card-title text-2xl">Connection Failed</h2>
-                          <p className="text-base-content/70">
-                            Unable to connect to the video call
-                          </p>
+                <div className="h-full min-h-0 p-2 sm:p-4">
+                  <div className="bg-base-200 p-2 sm:p-4 rounded-xl h-full min-h-0 overflow-hidden">
+                    {isInitializingCall ? (
+                      <div className="h-full min-h-[240px] flex items-center justify-center">
+                        <div className="text-center px-4">
+                          <Loader2Icon className="w-12 h-12 mx-auto animate-spin text-primary mb-4" />
+                          <p className="text-base sm:text-lg">Connecting to video call...</p>
                         </div>
                       </div>
-                    </div>
-                  ) : (
-                    <div className="h-full min-h-[280px]">
-                      <StreamVideo client={streamClient}>
-                        <StreamCall call={call}>
-                          <VideoCallUI chatClient={chatClient} channel={channel} />
-                        </StreamCall>
-                      </StreamVideo>
-                    </div>
-                  )}
+                    ) : !streamClient || !call ? (
+                      <div className="h-full min-h-[240px] flex items-center justify-center">
+                        <div className="card bg-base-100 shadow-xl max-w-md">
+                          <div className="card-body items-center text-center">
+                            <div className="w-20 h-20 sm:w-24 sm:h-24 bg-error/10 rounded-full flex items-center justify-center mb-4">
+                              <PhoneOffIcon className="w-10 h-10 sm:w-12 sm:h-12 text-error" />
+                            </div>
+                            <h2 className="card-title text-xl sm:text-2xl">Connection Failed</h2>
+                            <p className="text-base-content/70">
+                              Unable to connect to the video call
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="h-full min-h-[240px]">
+                        <StreamVideo client={streamClient}>
+                          <StreamCall call={call}>
+                            <VideoCallUI chatClient={chatClient} channel={channel} />
+                          </StreamCall>
+                        </StreamVideo>
+                      </div>
+                    )}
+                  </div>
                 </div>
-              </div>
               </Panel>
 
               <PanelResizeHandle className="h-4 bg-base-300 hover:bg-primary/70 transition-colors cursor-row-resize flex items-center justify-center">
@@ -236,64 +225,64 @@ function SessionPage() {
 
               <Panel defaultSize={60} minSize={25} className="h-full min-h-0">
                 <div className="h-full min-h-0 overflow-y-auto p-2 sm:p-4 flex flex-col gap-4">
-                <div className="bg-base-100 border border-base-300 rounded-xl p-4">
-                  <div className="flex flex-col gap-3">
-                    <div>
-                      <h1 className="text-2xl font-bold text-base-content">
-                        {session?.problem || "Loading..."}
-                      </h1>
-                      {problemData?.category && (
-                        <p className="text-base-content/60 mt-1">
-                          {problemData.category}
+                  <div className="bg-base-100 border border-base-300 rounded-xl p-4">
+                    <div className="flex flex-col gap-3">
+                      <div className="min-w-0">
+                        <h1 className="text-xl sm:text-2xl font-bold text-base-content break-words">
+                          {session?.problem || "Loading..."}
+                        </h1>
+                        {problemData?.category && (
+                          <p className="text-base-content/60 mt-1 break-words">
+                            {problemData.category}
+                          </p>
+                        )}
+                        <p className="text-base-content/60 mt-2 text-sm break-words">
+                          Host: {session?.host?.name || "Loading..."} |{" "}
+                          {session?.participant ? 2 : 1}/2 participants
                         </p>
-                      )}
-                      <p className="text-base-content/60 mt-2 text-sm">
-                        Host: {session?.host?.name || "Loading..."} |{" "}
-                        {session?.participant ? 2 : 1}/2 participants
-                      </p>
-                    </div>
+                      </div>
 
-                    <div className="flex flex-wrap items-center gap-2">
-                      {isHost && (
-                        <button
-                          className="btn btn-outline btn-sm gap-2"
-                          onClick={handleCopySessionLink}
-                          type="button"
+                      <div className="flex flex-wrap items-center gap-2">
+                        {isHost && (
+                          <button
+                            className="btn btn-outline btn-sm gap-2 w-full sm:w-auto"
+                            onClick={handleCopySessionLink}
+                            type="button"
+                          >
+                            <Link2Icon className="w-4 h-4" />
+                            Invite
+                          </button>
+                        )}
+
+                        <span
+                          className={`badge badge-lg ${getDifficultyBadgeClass(
+                            session?.difficulty
+                          )}`}
                         >
-                          <Link2Icon className="w-4 h-4" />
-                          Invite
-                        </button>
-                      )}
+                          {difficultyLabel}
+                        </span>
 
-                      <span
-                        className={`badge badge-lg ${getDifficultyBadgeClass(
-                          session?.difficulty
-                        )}`}
-                      >
-                        {difficultyLabel}
-                      </span>
+                        {isHost && session?.status === "active" && (
+                          <button
+                            onClick={handleEndSession}
+                            disabled={endSessionMutation.isPending}
+                            className="btn btn-error btn-sm gap-2 w-full sm:w-auto"
+                          >
+                            {endSessionMutation.isPending ? (
+                              <Loader2Icon className="w-4 h-4 animate-spin" />
+                            ) : (
+                              <LogOutIcon className="w-4 h-4" />
+                            )}
+                            End Session
+                          </button>
+                        )}
 
-                      {isHost && session?.status === "active" && (
-                        <button
-                          onClick={handleEndSession}
-                          disabled={endSessionMutation.isPending}
-                          className="btn btn-error btn-sm gap-2"
-                        >
-                          {endSessionMutation.isPending ? (
-                            <Loader2Icon className="w-4 h-4 animate-spin" />
-                          ) : (
-                            <LogOutIcon className="w-4 h-4" />
-                          )}
-                          End Session
-                        </button>
-                      )}
-
-                      {session?.status === "completed" && (
-                        <span className="badge badge-ghost badge-lg">Completed</span>
-                      )}
+                        {session?.status === "completed" && (
+                          <span className="badge badge-ghost badge-lg">Completed</span>
+                        )}
+                      </div>
                     </div>
                   </div>
-                </div>
 
                 {problemData?.description && (
                   <div className="bg-base-100 rounded-xl shadow-sm p-5 border border-base-300">
@@ -326,18 +315,18 @@ function SessionPage() {
                               Example {index + 1}
                             </p>
                           </div>
-                          <div className="bg-base-200 rounded-lg p-4 font-mono text-sm space-y-1.5">
-                            <div className="flex gap-2">
+                          <div className="bg-base-200 rounded-lg p-4 font-mono text-sm space-y-1.5 overflow-x-auto">
+                            <div className="flex gap-2 min-w-0">
                               <span className="text-primary font-bold min-w-[70px]">
                                 Input:
                               </span>
-                              <span>{example.input}</span>
+                              <span className="break-words whitespace-pre-wrap">{example.input}</span>
                             </div>
-                            <div className="flex gap-2">
+                            <div className="flex gap-2 min-w-0">
                               <span className="text-secondary font-bold min-w-[70px]">
                                 Output:
                               </span>
-                              <span>{example.output}</span>
+                              <span className="break-words whitespace-pre-wrap">{example.output}</span>
                             </div>
                             {example.explanation && (
                               <div className="pt-2 border-t border-base-300 mt-2">
@@ -363,7 +352,7 @@ function SessionPage() {
                       {problemData.constraints.map((constraint, index) => (
                         <li key={index} className="flex gap-2">
                           <span className="text-primary">-</span>
-                          <code className="text-sm">{constraint}</code>
+                          <code className="text-sm break-words whitespace-pre-wrap">{constraint}</code>
                         </li>
                       ))}
                     </ul>
@@ -397,14 +386,14 @@ function SessionPage() {
                   <div className="h-full overflow-y-auto bg-base-200">
                     <div className="p-4 sm:p-6 bg-base-100 border-b border-base-300">
                       <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-3 mb-3">
-                        <div>
-                          <h1 className="text-2xl sm:text-3xl font-bold text-base-content">
+                        <div className="min-w-0">
+                          <h1 className="text-2xl sm:text-3xl font-bold text-base-content break-words">
                             {session?.problem || "Loading..."}
                           </h1>
                           {problemData?.category && (
-                            <p className="text-base-content/60 mt-1">{problemData.category}</p>
+                            <p className="text-base-content/60 mt-1 break-words">{problemData.category}</p>
                           )}
-                          <p className="text-base-content/60 mt-2 text-sm sm:text-base">
+                          <p className="text-base-content/60 mt-2 text-sm sm:text-base break-words">
                             Host: {session?.host?.name || "Loading..."} |{" "}
                             {session?.participant ? 2 : 1}/2 participants
                           </p>
@@ -480,18 +469,18 @@ function SessionPage() {
                                     Example {index + 1}
                                   </p>
                                 </div>
-                                <div className="bg-base-200 rounded-lg p-4 font-mono text-sm space-y-1.5">
-                                  <div className="flex gap-2">
+                                <div className="bg-base-200 rounded-lg p-4 font-mono text-sm space-y-1.5 overflow-x-auto">
+                                  <div className="flex gap-2 min-w-0">
                                     <span className="text-primary font-bold min-w-[70px]">
                                       Input:
                                     </span>
-                                    <span>{example.input}</span>
+                                    <span className="break-words whitespace-pre-wrap">{example.input}</span>
                                   </div>
-                                  <div className="flex gap-2">
+                                  <div className="flex gap-2 min-w-0">
                                     <span className="text-secondary font-bold min-w-[70px]">
                                       Output:
                                     </span>
-                                    <span>{example.output}</span>
+                                    <span className="break-words whitespace-pre-wrap">{example.output}</span>
                                   </div>
                                   {example.explanation && (
                                     <div className="pt-2 border-t border-base-300 mt-2">
@@ -515,7 +504,7 @@ function SessionPage() {
                             {problemData.constraints.map((constraint, index) => (
                               <li key={index} className="flex gap-2">
                                 <span className="text-primary">-</span>
-                                <code className="text-sm">{constraint}</code>
+                                <code className="text-sm break-words whitespace-pre-wrap">{constraint}</code>
                               </li>
                             ))}
                           </ul>
